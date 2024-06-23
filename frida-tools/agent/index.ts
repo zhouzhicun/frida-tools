@@ -1,18 +1,7 @@
 
-import { Utils } from "../android/utils/utils.js";
-import { FuncHandler } from "../android/utils/funchandle.js";
+import * as dy from "../app/douyin_v28_1_1.js";
 
-import { AntiJavaDebug } from "../android/antiDebug/antiJavaDebug.js";
-import { AntiNativeDebug } from "../android/antiDebug/antiNativeDebug.js";
-
-import { UI } from "../android/ui.js";
-
-
-AntiJavaDebug.anti_debug();
-AntiNativeDebug.anti_debug();
-
-UI.print_config = FuncHandler.FuncPrintType.func_callstacks;
-UI.hook_ui();
+dy.main();
 
 
 

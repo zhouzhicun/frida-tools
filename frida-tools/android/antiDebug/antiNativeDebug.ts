@@ -1,4 +1,4 @@
-import { abort } from "process";
+
 import { Utils } from "../utils/utils.js";
 
 export namespace AntiNativeDebug {
