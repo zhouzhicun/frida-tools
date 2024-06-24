@@ -1,5 +1,5 @@
 
-import { FuncHandler } from "./utils/funcHandle.js";
+import { FuncHandler } from "../utils/funcHandle.js";
 
 export namespace Socket {
 
