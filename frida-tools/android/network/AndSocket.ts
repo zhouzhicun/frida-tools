@@ -1,5 +1,6 @@
 
 import { HookFuncHandler } from "../../base/HookFuncHandler.js";
+import { StringUtils } from "../../base/StringUtils.js";
 
 export namespace AndSocket {
 
@@ -14,12 +15,18 @@ export namespace AndSocket {
 
 
 
-    function jhexdump(array: any) {
-        // var ptr = Memory.alloc(array.length);
-        // for (var i = 0; i < array.length; ++i)
-        //     Memory.writeS8(ptr.add(i), array[i]);
-        // //console.log(hexdump(ptr, { offset: off, length: len, header: false, ansi: false }));
-        // console.log(hexdump(ptr, { offset: 0, length: array.length, header: false, ansi: false }));
+    function dumpByteArr(array: any) {
+
+        // var hexstr = StringUtils.bytesToHex(array)
+        // console.log(hexstr)
+
+        var ptr = Memory.alloc(array.length);
+        var temp = ptr;
+        for (var i = 0; i < array.length; ++i) {
+            temp.add(i)
+            temp.writeS8(array[i])
+        }
+        console.log(hexdump(ptr, { offset: 0, length: array.length, header: false, ansi: false }));
     }
 
 
@@ -37,19 +44,19 @@ export namespace AndSocket {
     export function hook_socket_address() {
 
         Java.perform(function () {
-            // java.net.InetSocketAddress.InetSocketAddress(java.net.InetAddress, int)
+
             Java.use('java.net.InetSocketAddress').$init.overload('java.net.InetAddress', 'int').implementation = function (addr: any, port: any) {
 
                 var result = this.$init(addr, port)
 
-                // new Utils.FuncHandler(get_config(), function(){
-                //     console.log("[*] hook_func => java.net.InetSocketAddress.init(address, port)")
-                // }, function(){
-                //     console.log("addr =>", addr.toString(), "port =>", port)
-                // }, function(){
-                //     Utils.print_java_callstacks()
-                // }).print()
-        
+                let funcName = "java.net.InetSocketAddress.InetSocketAddress(java.net.InetAddress, int) "
+                let params = ''
+                params += "addr =>", addr.toString(), "port =>", port
+    
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
+                }).print();
+
                 return result
             }
         })
@@ -60,16 +67,13 @@ export namespace AndSocket {
 
         Java.perform(function () {
 
-            // java.net.SocketOutputStream.write
-            // java.net.SocketOutputStream.socketWrite
+
             Java.use('java.net.SocketOutputStream').socketWrite.overload('[B', 'int', 'int').implementation = function (bytearray1: any, int1: any, int2: any) {
                 
                 var result = this.socketWrite(bytearray1, int1, int2)
 
                 let funcName = "java.net.SocketOutputStream.socketWrite([B, int, int)"
-                let params = `result = ${result}, bytearray1 = ${bytearray1}, int1 = ${int1}, int2 = ${int2}`
-    
-                //以下代码固定，只需修改上面的funcName、params
+                let params = `result = ${result}, bytearray1 = ${StringUtils.bytesToHex(bytearray1)}, int1 = ${int1}, int2 = ${int2}`
                 new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
                     console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
@@ -77,21 +81,16 @@ export namespace AndSocket {
                 return result
             }
 
-            // java.net.SocketInputStream.read
-            // java.net.SocketInputStream.socketRead0
             Java.use('java.net.SocketInputStream').read.overload('[B', 'int', 'int').implementation = function (bytearray1: any, int1: any, int2: any) {
                 
                 var result = this.read(bytearray1, int1, int2)
 
                 let funcName = "java.net.SocketInputStream.socketRead0([B, int, int)"
-                let params = `result = ${result}, bytearray1 = ${bytearray1}, int1 = ${int1}, int2 = ${int2}`
-    
-                //以下代码固定，只需修改上面的funcName、params
+                let params = `result = ${result}, bytearray1 = ${StringUtils.bytesToHex(bytearray1)}, int1 = ${int1}, int2 = ${int2}`
+
                 new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
                     console.log(HookFuncHandler.logTips.funcParams + params)
-                    jhexdump(bytearray1)
-                    //var ByteString = Java.use("com.android.okhttp.okio.ByteString");
-                    // console.log('contents: => ', ByteString.of(bytearray1).hex())
+                    dumpByteArr(bytearray1)
                 }).print();
 
 
@@ -105,27 +104,34 @@ export namespace AndSocket {
 
         Java.perform(function () {
 
-            // com.android.org.conscrypt.ConscryptFileDescriptorSocket$SSLOutputStream.write
+
             Java.use('com.android.org.conscrypt.ConscryptFileDescriptorSocket$SSLOutputStream').write.overload('[B', 'int', 'int').implementation = function (bytearray1: any, int1: any, int2: any) {
+                
                 var result = this.write(bytearray1, int1, int2)
 
-                console.log('write result,bytearray1,int1,int2=>', result, bytearray1, int1, int2)
+                let funcName = "ConscryptFileDescriptorSocket$SSLOutputStream.write([B, int, int)"
+                let params = `result = ${result}, bytearray1 = ${StringUtils.bytesToHex(bytearray1)}, int1 = ${int1}, int2 = ${int2}`
 
-                var ByteString = Java.use("com.android.okhttp.okio.ByteString");
-                console.log('contents: => ', ByteString.of(bytearray1).hex())
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
+                    console.log(HookFuncHandler.logTips.funcParams + params)
+                    dumpByteArr(bytearray1)
+                }).print();
 
                 return result
             }
 
-            // com.android.org.conscrypt.ConscryptFileDescriptorSocket$SSLInputStream.read
+
             Java.use('com.android.org.conscrypt.ConscryptFileDescriptorSocket$SSLInputStream').read.overload('[B', 'int', 'int').implementation = function (bytearray1: any, int1: any, int2: any) {
+                
                 var result = this.read(bytearray1, int1, int2)
 
-                console.log('read result,bytearray1,int1,int2=>', result, bytearray1, int1, int2)
+                let funcName = "ConscryptFileDescriptorSocket$SSLInputStream.read([B, int, int)"
+                let params = `result = ${result}, bytearray1 = ${StringUtils.bytesToHex(bytearray1)}, int1 = ${int1}, int2 = ${int2}`
 
-                var ByteString = Java.use("com.android.okhttp.okio.ByteString");
-                //console.log('contents: => ', ByteString.of(bytearray1).hex())
-                jhexdump(bytearray1)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
+                    console.log(HookFuncHandler.logTips.funcParams + params)
+                    dumpByteArr(bytearray1)
+                }).print();
 
 
                 return result

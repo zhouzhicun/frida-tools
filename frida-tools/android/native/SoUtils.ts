@@ -1,8 +1,9 @@
-
+import exp from "constants";
+import { Utils } from "../../base/Utils.js";
 
 export namespace SOUtils {
 
-     /************************************** helper **************************************************** */
+    /************************************** helper **************************************************** */
 
     //获取真实地址
     export function get_addr(soName: string, offset: number) {
@@ -55,7 +56,7 @@ export namespace SOUtils {
 
         //写文件
         var success = dump_to_file(dump_file_path, targetModule.base, targetModule.size);
-        if(success) {
+        if (success) {
             console.log("[dump so]:", dump_file_path);
         }
     }
@@ -65,14 +66,14 @@ export namespace SOUtils {
 
         var base_addr = Module.findBaseAddress(soName);
         var dump_start_addr = base_addr.add(offset);
-        console.log(hexdump(dump_start_addr, {length: length}));
+        console.log(hexdump(dump_start_addr, { length: length }));
 
         var savePath = get_dump_root_path(bundleName)
         var dump_file_path = savePath + dump_start_addr + "_" + dump_start_addr.add(length) + ".bin";
 
         //写文件
         var success = dump_to_file(dump_file_path, dump_start_addr, length);
-        if(success) {
+        if (success) {
             console.log("[dump memory]:", dump_file_path);
         }
     }
@@ -209,6 +210,60 @@ export namespace SOUtils {
     }
 
 
+    /******************************************* watch ***************************************************** */
+
+    /**
+     * 从内存中搜索特征数据, 例如：
+     * arm64 svc 0 : 010000D4
+     * arm64 svc 0x80: 011000D4
+     * ssl_cronet(libsscronet.so): 参考 FridaContainer的 Anti.ts文件。
+     * 01 06 44 BF 6F F0 CE 00 70 47 81 04 44 BF 6F F0 95 00 70 47 41 01 44 BF 6F F0 D8 00 70 47 41 06 44 BF 6F F0 CD 00 70 47 41 07 44 BF 6F F0 C9 00 70 47 C1 07 1C BF 6F F0 C7 00 70 47 C1 01 44 BF
+    */
+    export function search_memory(soName: string, hexStr: string) {
+
+        // 获取模块基址和大小
+        var module = Process.getModuleByName(soName);
+        var base = module.base;
+        var size = module.size;
+
+        var matchedArr: NativePointer[]
+
+        // 在模块地址范围内搜索特征数据
+        var matches = Memory.scan(base, size, hexStr, {
+            onMatch: function (address, size) {
+                var offset = address.sub(base);
+                matchedArr.push(offset)
+            },
+        });
+
+        return matchedArr
+    }
+
+    
+
+
+
+    /**
+     * 对对应的偏移地址下断点，并打印其堆栈。
+     * 用途：比如通过IDA搜索 svc 0的机器码得到其指令的偏移地址，然后通过frida hook它，并打印堆栈。
+     * 
+     * @param soName so名称
+     * @param points 待观察的指令偏移地址数组
+     * 
+     */
+    export function watch_points(soName: string, points: number[]) {
+
+        var base_addr = Module.findBaseAddress(soName);
+        points.forEach((addr) => {
+            Interceptor.attach(base_addr.add(addr), {
+                onEnter: function () {
+                    Utils.print_native_callstacks(this.context);
+                }
+            });
+        })
+
+    }
+
 
     /******************************************* Stalker trace ***************************************************** */
 
@@ -221,16 +276,16 @@ export namespace SOUtils {
      * @param end_offset   stalker的结束地址
      * @param watch_points 观察点：一组偏移地址
      */
-    function trace_instruction(soName: string,  hook_addr: number, start_offset: number, end_offset: number, watch_points: [number]) {
+    export function trace_instruction(soName: string, hook_addr: number, start_offset: number, end_offset: number, watch_points: number[]) {
 
         var base_addr = Module.findBaseAddress(soName);
-        
-        Interceptor.attach(base_addr.add(hook_addr),  {
-            onLeave: function(retval) {
+
+        Interceptor.attach(base_addr.add(hook_addr), {
+            onLeave: function (retval) {
                 Stalker.unfollow(this.pid)
                 console.log("stalker follow stop ==>")
             },
-            onEnter: function(args) {
+            onEnter: function (args) {
 
                 console.log("stalker follow start ==>")
                 this.pid = Process.getCurrentThreadId();
@@ -242,22 +297,22 @@ export namespace SOUtils {
                         block: false,   // block executed: coarse execution trace
                         compile: false  // block compiled: useful for coverage
                     },
-    
+
                     // onReceive: Called with `events` containing a binary blob comprised of one or more GumEvent structs. 
                     // See `gumevent.h` for details about the format. Use `Stalker.parse()` to examine the data.
                     onReceive(events) {
-    
+
                     },
-    
+
                     transform: function (iterator: any) {
-    
+
                         //iterator 对应一个基本块。基本块是一组连续的指令，没有分支。
                         var instruction = iterator.next();
 
                         //判断当前指令是不是原函数内的指令
                         const inst_addr = instruction.address;
                         var isModule = inst_addr.compare(base_addr.add(start_offset)) >= 0 && inst_addr.compare(base_addr.add(end_offset)) < 0;
-    
+
                         //遍历执行该基本块的所有指令
                         do {
                             if (isModule) {
@@ -275,11 +330,11 @@ export namespace SOUtils {
                                     });
 
                                 }
-                        
+
                             }
                             iterator.keep();
                         } while ((instruction = iterator.next()) !== null);
-    
+
                     }
                 });
 

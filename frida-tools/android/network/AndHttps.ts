@@ -30,10 +30,10 @@ export namespace AndHttps {
                 var result = this.$init(urlstr)
 
                 let funcName = "java.net.URL.init()"
-                let params = 'url = '+ urlstr
+                let params = ''
+                params += 'url = '+ urlstr
     
-                //以下代码固定，只需修改上面的funcName、params
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
                     console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
@@ -44,8 +44,6 @@ export namespace AndHttps {
      
                 let funcName = "java.net.URL.openConnection()"
                 let params = ''
-    
-                //以下代码固定，只需修改上面的funcName、params
                 new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
                     console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
@@ -53,11 +51,19 @@ export namespace AndHttps {
                 return result
             }
 
-            //hook com.android.okhttp.internal.huc.HttpURLConnectionImpl
             var HttpURLConnectionImpl = Java.use('com.android.okhttp.internal.huc.HttpURLConnectionImpl')
             HttpURLConnectionImpl.setRequestProperty.implementation = function (key: any, value: any) {
                 var result = this.setRequestProperty(key, value)
-                console.log('setRequestProperty => ', key, ':', value)
+
+
+                let funcName = "com.android.okhttp.internal.huc.HttpURLConnectionImpl.setRequestProperty(String field, String newValue)"
+                let params = ''
+                params += `key = ${key}, value = ${value}`
+    
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
+                }).print();
+
                 return result
             }
         })
@@ -69,16 +75,25 @@ export namespace AndHttps {
 
         Java.perform(function () {
             var RetrofitBuilder = Java.use("retrofit2.Retrofit$Builder")
-            RetrofitBuilder.baseUrl.overload('java.lang.String').implementation = function (str: string) {
-                console.log("Entering 1")
-                var result = this.baseUrl(str);
-                console.log("result,str=>", result, str)
+            RetrofitBuilder.baseUrl.overload('java.lang.String').implementation = function (url: string) {
+
+                var result = this.baseUrl(url);
+                let funcName = "retrofit2.Retrofit$Builder.baseUrl(String url)"
+                let params = ''
+                params += `url = ${url}`
+    
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
+                }).print();
+
                 return result;
             }
-            RetrofitBuilder.baseUrl.overload('okhttp3.HttpUrl').implementation = function (str: string) {
-                console.log("Entering 1")
-                var result = this.baseUrl(str);
-                console.log("result,str=>", result, str)
+            RetrofitBuilder.baseUrl.overload('okhttp3.HttpUrl').implementation = function (url: string) {
+
+                var result = this.baseUrl(url);
+                let funcName = "retrofit2.Retrofit$Builder.baseUrl(HttpUrl url)"
+                let params = ''
+                params += `url = ${url}`
                 return result;
             }
         })
