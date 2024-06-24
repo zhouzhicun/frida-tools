@@ -1,11 +1,10 @@
 
-import * as CFuncUtils from "./cFuncUtils.js";
-import { ZZString } from "./stdString.js";
+import { Utils } from "./Utils";
+import { StringUtils } from "./stringUtils";
 
 export namespace Base {
     
-    export const cFuncUtils = CFuncUtils;
-
-    export const zzString = ZZString;
+    export const utils = Utils;
+    export const stringUtils = StringUtils;
 
 }

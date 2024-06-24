@@ -1,10 +1,10 @@
-import exp from "constants"
+
 
 /**
  * string, bytes, hex 三者之间互转操作
  * 
  */
-export namespace ZZString {
+export namespace StringUtils {
 
 
     /******************* bytes 与 字符串 互转  ************************/

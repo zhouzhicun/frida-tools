@@ -1,12 +1,12 @@
 
-import { FuncHandler } from "./utils/funcHandle.js"
+import { HookFuncHandler } from "../../base/hookFuncHandle"
 
-export namespace UI {
+export namespace AndUI {
 
 
     /*--------------------------------------  config ---------------------------------------------- */
 
-    export let print_config = FuncHandler.FuncPrintType.func_name
+    export let print_config = HookFuncHandler.FuncPrintType.func_name
 
         
     /*--------------------------------------  public ---------------------------------------------- */
@@ -41,8 +41,8 @@ export namespace UI {
                 let params = ''
     
                 //以下代码固定，只需修改上面的funcName、params
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function(){
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
         
             };

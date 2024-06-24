@@ -1,16 +1,13 @@
 
 
+import { HookFuncHandler } from "../../base/hookFuncHandle";
+import { StringUtils } from "../../base/stringUtils";
 
-
-import { FuncHandler } from "./utils/func_handle.js";
-import { ZZString } from "../base/std_string.js";
-
-
-export namespace Encrypt {
+export namespace AndEncrypt {
 
     /*--------------------------------------  config ---------------------------------------------- */
 
-    export let print_config = FuncHandler.FuncPrintType.func_params
+    export let print_config = HookFuncHandler.FuncPrintType.func_params
 
 
     /*--------------------------------------  private  ---------------------------------------------- */
@@ -42,13 +39,13 @@ export namespace Encrypt {
 
         let desc = ''
         if (mode & PRINT_MODE_STRING) {
-            desc += tip + "|str:" + ZZString.bytesToString(bytes) + "\n"
+            desc += tip + "|str:" + StringUtils.bytesToString(bytes) + "\n"
         }
         if (mode & PRINT_MODE_HEX) {
-            desc += tip + "|hex:" + ZZString.bytesToHex(bytes) + "\n"
+            desc += tip + "|hex:" + StringUtils.bytesToHex(bytes) + "\n"
         }
         if (mode & PRINT_MODE_BASE64) {
-            desc += tip + "|base64:" + ZZString.bytesToBase64(bytes) + "\n"
+            desc += tip + "|base64:" + StringUtils.bytesToBase64(bytes) + "\n"
         }
         return desc
     }
@@ -73,8 +70,8 @@ export namespace Encrypt {
                 params += "算法名：" + b + "\n"
                 params += getParamsPrintDesc(a, "密钥", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -93,8 +90,8 @@ export namespace Encrypt {
                 let params = ''
                 params += getParamsPrintDesc(bytes_key_des, "des密钥", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
 
@@ -110,8 +107,8 @@ export namespace Encrypt {
                 let params = ''
                 params += getParamsPrintDesc(bytes_key_des, "des密钥", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -129,8 +126,8 @@ export namespace Encrypt {
                 let params = ''
                 params += "算法名：" + a + "\n"
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -145,8 +142,8 @@ export namespace Encrypt {
                 let params = ''
                 params += getParamsPrintDesc(a, "update input", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
             }
@@ -162,8 +159,8 @@ export namespace Encrypt {
                 params += "offset = " + b + "\n"
                 params += "len = " + c + "\n"
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
             }
 
@@ -176,8 +173,8 @@ export namespace Encrypt {
                 let params = ''
                 params += getParamsPrintDesc(result, "doFinal结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
 
@@ -195,8 +192,8 @@ export namespace Encrypt {
                 params += getParamsPrintDesc(a, "input", PRINT_MODE_STRING | PRINT_MODE_HEX)
                 params += getParamsPrintDesc(result, "doFinal结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
 
@@ -212,8 +209,8 @@ export namespace Encrypt {
                 let funcName = "java.security.MessageDigest.getInstance(String algorithm, String provider)"
                 let params = ''
                 params += "算法名：" + a + "\n"
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return this.getInstance(a, b);
@@ -225,8 +222,8 @@ export namespace Encrypt {
                 let funcName = "java.security.MessageDigest.getInstance(String algorithm)"
                 let params = ''
                 params += "算法名：" + a + "\n"
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return this.getInstance(a);
@@ -239,8 +236,8 @@ export namespace Encrypt {
                 let params = ''
                 params += getParamsPrintDesc(a, "input", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return this.update(a);
@@ -254,8 +251,8 @@ export namespace Encrypt {
                 params += "offset = " + b + "\n"
                 params += "len = " + c + "\n"
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return this.update(a, b, c);
@@ -270,8 +267,8 @@ export namespace Encrypt {
                 let params = ''
                 params += getParamsPrintDesc(result, "digest结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
                 return result;
             }
@@ -286,8 +283,8 @@ export namespace Encrypt {
                 params += getParamsPrintDesc(result, "input", PRINT_MODE_STRING | PRINT_MODE_HEX)
                 params += getParamsPrintDesc(result, "digest结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
 
@@ -304,8 +301,8 @@ export namespace Encrypt {
                 let params = ''
                 params += getParamsPrintDesc(result, "iv向量", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
 
@@ -321,8 +318,8 @@ export namespace Encrypt {
                 let params = ''
                 params += "模式填充:" + a + "\n"
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -339,8 +336,8 @@ export namespace Encrypt {
                 params += getModeDesc(a)
                 params += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -354,8 +351,8 @@ export namespace Encrypt {
                 let funcName = "javax.crypto.Cipher.init(int operation_mode, Certificate certificate) "
                 let params = ''
                 params += getModeDesc(a)
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -372,8 +369,8 @@ export namespace Encrypt {
                 params += getModeDesc(a)
                 params += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -388,8 +385,8 @@ export namespace Encrypt {
                 let params = ''
                 params += getModeDesc(a)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -406,8 +403,8 @@ export namespace Encrypt {
                 params += getModeDesc(a)
                 params += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -424,8 +421,8 @@ export namespace Encrypt {
                 params += getModeDesc(a)
                 params += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
                 return result;
             }
@@ -441,8 +438,8 @@ export namespace Encrypt {
                 params += getModeDesc(a)
                 params += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -459,8 +456,8 @@ export namespace Encrypt {
                 params += getModeDesc(a)
                 params += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -474,8 +471,8 @@ export namespace Encrypt {
                 let params = ''
                 params += getParamsPrintDesc(a, "input", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -492,8 +489,8 @@ export namespace Encrypt {
                 params += "offset = " + b + "\n"
                 params += "len = " + c + "\n"
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -507,8 +504,8 @@ export namespace Encrypt {
                 let params = ''
                 params += getParamsPrintDesc(result, "doFinal结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -523,8 +520,8 @@ export namespace Encrypt {
                 params += getParamsPrintDesc(a, "input", PRINT_MODE_STRING | PRINT_MODE_HEX)
                 params += getParamsPrintDesc(result, "doFinal结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -542,8 +539,8 @@ export namespace Encrypt {
                 let params = ''
                 params += getParamsPrintDesc(a, "RSA密钥", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -562,8 +559,8 @@ export namespace Encrypt {
                 params += "RSA密钥 modulus:" + a.toString(16) + "\n"
                 params += "RSA密钥 public_exponent:" + b.toString(16) + "\n"
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -583,8 +580,8 @@ export namespace Encrypt {
                 params += getParamsPrintDesc(bytes_public, "公钥", PRINT_MODE_STRING | PRINT_MODE_HEX)
                 params += getParamsPrintDesc(bytes_private, "私钥", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result;
@@ -602,8 +599,8 @@ export namespace Encrypt {
                 params += getParamsPrintDesc(bytes_public, "公钥", PRINT_MODE_STRING | PRINT_MODE_HEX)
                 params += getParamsPrintDesc(bytes_private, "私钥", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
 

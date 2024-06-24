@@ -1,6 +1,6 @@
 
 
-export namespace HookSo {
+export namespace SOUtils {
 
      /************************************** helper **************************************************** */
 

@@ -1,6 +1,6 @@
-import { Utils } from "./utils.js";
+import { Utils } from "./Utils";
 
-export namespace FuncHandler {
+export namespace HookFuncHandler {
 
     export enum FuncPrintType {
         none,             //不打印
@@ -9,7 +9,6 @@ export namespace FuncHandler {
         func_callstacks,   //函数调用栈
     }
 
-
     export const logTips = {
         funcName: "funcName ==> ",
         funcParams: "funcParams ==> ",
@@ -17,8 +16,6 @@ export namespace FuncHandler {
     }
 
 
-    
-    
     /********************************************* hook函数打印处理  *********************************************** */
 
     type VoidCallback = () => void;
@@ -34,11 +31,11 @@ export namespace FuncHandler {
            
             this.printType = printType;
             this.printFuncName = function(){
-                console.log(FuncHandler.logTips.funcName + funcname)
+                console.log(HookFuncHandler.logTips.funcName + funcname)
             }
             this.printFuncParams = funcparams
             this.printCallstacks = function(){
-                console.log(FuncHandler.logTips.funcCallstacks)
+                console.log(HookFuncHandler.logTips.funcCallstacks)
                 callstacks()
             }
         }

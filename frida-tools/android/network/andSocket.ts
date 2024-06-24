@@ -1,11 +1,11 @@
 
-import { FuncHandler } from "../utils/funcHandle.js";
+import { HookFuncHandler } from "../../base/hookFuncHandle";
 
-export namespace Socket {
+export namespace AndSocket {
 
     /*--------------------------------------  config ---------------------------------------------- */
 
-    export let print_config = FuncHandler.FuncPrintType.func_name
+    export let print_config = HookFuncHandler.FuncPrintType.func_name
 
 
 
@@ -70,8 +70,8 @@ export namespace Socket {
                 let params = `result = ${result}, bytearray1 = ${bytearray1}, int1 = ${int1}, int2 = ${int2}`
     
                 //以下代码固定，只需修改上面的funcName、params
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function(){
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                 }).print();
 
                 return result
@@ -87,8 +87,8 @@ export namespace Socket {
                 let params = `result = ${result}, bytearray1 = ${bytearray1}, int1 = ${int1}, int2 = ${int2}`
     
                 //以下代码固定，只需修改上面的funcName、params
-                new FuncHandler.JavaFuncHandler(print_config, funcName, function(){
-                    console.log(FuncHandler.logTips.funcParams + params)
+                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
+                    console.log(HookFuncHandler.logTips.funcParams + params)
                     jhexdump(bytearray1)
                     //var ByteString = Java.use("com.android.okhttp.okio.ByteString");
                     // console.log('contents: => ', ByteString.of(bytearray1).hex())
