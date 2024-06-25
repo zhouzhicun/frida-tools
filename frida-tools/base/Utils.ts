@@ -1,3 +1,4 @@
+import { StringUtils } from "./StringUtils.js";
 
 
 export namespace Utils {
@@ -59,6 +60,7 @@ export namespace Utils {
         Memory.patchCode(fake_func, 4096, code => {
             const cw = new Arm64Writer(code, { pc: fake_func })
             cw.putRet()
+            cw.flush()
         })
         return fake_func
     }
@@ -66,23 +68,29 @@ export namespace Utils {
 
     /*********************************** Patch指令 ARM64 ******************************************** */
 
+    /**
+     * patch 连续N条ARM64指令
+     * v1版本: 通过调用putInstruction函数逐指令patch， 传入指令hex字符串
+     * v2版本：通过调用v3函数进行patch， 传入指令hex字符串
+     * v3版本：通过调用putBytes多字节批量path，传入指令的字节数组
+     * 
+     */
 
 
     /**
-     * patch 连续N条ARM64指令
-     * 
      * @param addr 起始地址
-     * @param n N条arm64指令
      * @param codehex N条指令对应的机器码(16进制表示)，每条指令占8个字符，支持空格隔开，例如：
-     * 9511168d393ceaeeefb4ed6c03c60941 或者 9511168d 393ceaee efb4ed6c 03c60941
+     * '9511168d393ceaeeefb4ed6c03c60941' 或者 '9511168d 393ceaee efb4ed6c 03c60941'
      */
-    export function patchCode64(startAddr: NativePointer, n: number, codehex: string) {
+    export function patchCode64_v1(startAddr: NativePointer, codehex: string) {
 
         //1.替换指令代码中的空格
         codehex = codehex.replace(/\s/g, '');
+        const byteCount = Math.floor(codehex.length / 2);
 
         //2.开始patch
-        Memory.patchCode(startAddr, n * 4, code => {
+        Memory.patchCode(startAddr, byteCount, code => {
+            
             const cw = new Arm64Writer(code, { pc: startAddr });
 
             //1条ARM64指令占4个字节，所以每次取8个字符；并转换为16进制整数, 然后写入
@@ -93,6 +101,37 @@ export namespace Utils {
             }
             cw.flush();
         });
+
+    }
+
+    export function patchCode64_v2(startAddr: NativePointer, codehex: string) {
+
+        //1.替换指令代码中的空格
+        codehex = codehex.replace(/\s/g, '');
+        const bytes = StringUtils.hexToBytes(codehex)
+        patchCode64_v3(startAddr, bytes)
+
+    }
+
+    export function patchCode64_v3(startAddr: NativePointer, codeBytes: number[]) {
+        Memory.patchCode(startAddr, codeBytes.length, code => {
+            const cw = new Arm64Writer(code, { pc: startAddr });
+            cw.putBytes(codeBytes);
+            cw.flush();
+        });
+    }
+
+    //批量patch
+    export function patchCode64_batch(startAddrArr: NativePointer[], codehexArr: string[]) {
+
+        if (startAddrArr.length != codehexArr.length) {
+            console.log("patchCode64_batch: 参数长度不一致")
+            return
+        }
+
+        for (let i = 0; i < startAddrArr.length; i++) {
+            patchCode64_v2(startAddrArr[i], codehexArr[i])
+        }
 
     }
 
@@ -144,6 +183,7 @@ export namespace Utils {
             nop64(addrs[i])
         }
     }
+
 
 }
 
