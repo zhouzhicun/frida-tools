@@ -3,6 +3,7 @@
 
 import { AntiJavaDebug } from "../android/antiDebug/AntiJavaDebug.js";
 import { AntiNativeDebug } from "../android/antiDebug/AntiNativeDebug.js";
+import { AndEncrypt } from "../android/encrypt/AndEncrypt.js";
 import { SOUtils } from "../android/native/SoUtils.js";
 import { AndHttps } from "../android/network/AndHttps.js";
 import { AndSocket } from "../android/network/AndSocket.js";
@@ -29,31 +30,35 @@ export function main() {
     // let app_email = ""
 
 
-    AntiJavaDebug.anti_debug();
-    AntiNativeDebug.anti_debug();
-    AndUI.print_config = HookFuncHandler.FuncPrintType.func_callstacks;
-    AndUI.hook_ui();
+    // AntiJavaDebug.anti_debug();
+    // AntiNativeDebug.anti_debug();
+    // AndUI.print_config = HookFuncHandler.FuncPrintType.func_callstacks;
+    // AndUI.hook_ui();
 
 
-    AndHttps.print_config = HookFuncHandler.FuncPrintType.func_callstacks
-    AndHttps.hook_https()
+    // AndHttps.print_config = HookFuncHandler.FuncPrintType.func_callstacks
+    // AndHttps.hook_https()
 
-    AndSocket.print_config = HookFuncHandler.FuncPrintType.func_callstacks
-    AndSocket.hook_socket()
+    // AndSocket.print_config = HookFuncHandler.FuncPrintType.func_callstacks
+    // AndSocket.hook_socket()
 
     
-    SOUtils.hook_location_anti_frida()
+    // SOUtils.hook_location_anti_frida()
 
-    SOUtils.hook_dlopen("libnesec.so", function () {
-        console.log("libnesec.so dlopen enter")
-    }, function() {
-        console.log("libnesec.so dlopen leave")
-        SOUtils.dump_so_export_symbols("libnesec.so", "com.netease.cloudmusic");
-    });
+    // SOUtils.hook_dlopen("libnesec.so", function () {
+    //     console.log("libnesec.so dlopen enter")
+    // }, function() {
+    //     console.log("libnesec.so dlopen leave")
+    //     SOUtils.dump_so_export_symbols("libnesec.so", "com.netease.cloudmusic");
+    // });
 
-    SOUtils.hook_linker_call_constructor("libnesec.so", function() {
-        console.log("libnesec.so linker::CallConstructors enter")
-    });
+    // SOUtils.hook_linker_call_constructor("libnesec.so", function() {
+    //     console.log("libnesec.so linker::CallConstructors enter")
+    // });
+
+
+    AndEncrypt.print_config = HookFuncHandler.FuncPrintType.func_params
+    AndEncrypt.hook_encrypt()
 
 
 }

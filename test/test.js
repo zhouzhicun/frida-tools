@@ -53,29 +53,27 @@
     }
 
 
-var str = "hello world";
+// var str = "hello world";
 
-console.log("str:", str);
+// console.log("str:", str);
 
-var bytes = stringToBytes(str);
-var hex = stringToHex(str);
+// var bytes = stringToBytes(str);
+// var hex = stringToHex(str);
 
-console.log(`stringToBytes = ${bytes}`)
-console.log(`stringToHex = ${hex}`)
+// console.log(`stringToBytes = ${bytes}`)
+// console.log(`stringToHex = ${hex}`)
 
-console.log(`bytesToHex = ${bytesToHex(bytes)}`)
-console.log(`bytesToString = ${bytesToString(bytes)}`)
+// console.log(`bytesToHex = ${bytesToHex(bytes)}`)
+// console.log(`bytesToString = ${bytesToString(bytes)}`)
 
-console.log(`hexToBytes = ${hexToBytes(hex)}`)
-console.log(`hexToString = ${hexToString(hex)}`)
-
-
-var base64 = btoa(bytesToString(bytes))
-console.log(`base64 = ${base64}`)
-
-var bytesaa = stringToBytes(atob(base64))
-console.log(`bytesaa = ${bytesaa}`)
+// console.log(`hexToBytes = ${hexToBytes(hex)}`)
+// console.log(`hexToString = ${hexToString(hex)}`)
 
 
+// var base64 = btoa(bytesToString(bytes))
+// console.log(`base64 = ${base64}`)
+
+// var bytesaa = stringToBytes(atob(base64))
+// console.log(`bytesaa = ${bytesaa}`)
 
 

@@ -20,5 +20,13 @@ type-checking feedback.
 
 
 
+### 注意事项
+
+运行的时候，建议在命令后面加上: -o xxx.log, 例如：
+frida -U -f com.example.android --no-pause -l _agent.js -o xxx.log
+原因:
+将日志打印到 xxx.log文件中，因为直接打到控制台，可能日志顺序混乱，并且刷的太快导致没法看。
+
 
 ### 工程规范(待补充！！！)
+

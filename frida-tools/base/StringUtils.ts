@@ -1,4 +1,5 @@
 
+import { Buffer } from "node:buffer";
 
 /**
  * string, bytes, hex 三者之间互转操作
@@ -11,7 +12,12 @@ export namespace StringUtils {
 
     //bytes转字符串
     export function bytesToString(bytes: number[]): string {
-        return bytes.map(byte => String.fromCharCode(byte)).join('')
+        let tempBytes = Buffer.from(bytes)
+        var str = ''
+        for (var i = 0; i < tempBytes.length; i++) {
+            str += String.fromCharCode(tempBytes[i])
+        }
+        return str;
     }
 
     //字符串转bytes
@@ -54,19 +60,23 @@ export namespace StringUtils {
 
     //bytes转hex字符串
     export function bytesToHex(bytes: number[]): string {
-        return bytes.map(byte => ('00' + (byte & 0xFF).toString(16)).slice(-2)).join('') 
+        let tempBytes = Buffer.from(bytes)
+        var str = ''
+        for (var i = 0; i < tempBytes.length; i++) {
+            str += ('00' + (tempBytes[i] & 0xFF).toString(16)).slice(-2)
+        }
+        return str
     }
-
-
 
     /******************* string 与 bytes 互转  ************************/
 
     export function bytesToBase64(bytes: number[]): string {
-        return btoa(bytesToString(bytes))
+        //bytes = Java.array('byte', bytes);
+        return Buffer.from(bytes).toString('base64')
     }
 
     export function base64ToBytes(base64: string): number[] {
-        return stringToBytes(atob(base64))
+        return Array.from(Buffer.from(base64, 'base64'))
     }
 
 

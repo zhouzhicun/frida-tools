@@ -25,10 +25,10 @@ export namespace AndEncrypt {
     function getModeDesc(mode: number) {
         let desc = ''
         if (mode == MODE_ENCRYPT) {
-            desc = "init  | 加密模式\n"
+            desc = "init | 加密模式\n"
         }
         else if (mode == MODE_DECRYPT) {
-            desc = "init  | 解密模式\n"
+            desc = "init | 解密模式\n"
         }
         return desc
 
@@ -39,16 +39,37 @@ export namespace AndEncrypt {
 
         let desc = ''
         if (mode & PRINT_MODE_STRING) {
-            desc += tip + "|str:" + StringUtils.bytesToString(bytes) + "\n"
+            desc += tip + " | str ==> " + StringUtils.bytesToString(bytes) + "\n"
         }
         if (mode & PRINT_MODE_HEX) {
-            desc += tip + "|hex:" + StringUtils.bytesToHex(bytes) + "\n"
+            desc += tip + " | hex ==> " + StringUtils.bytesToHex(bytes) + "\n"
         }
         if (mode & PRINT_MODE_BASE64) {
-            desc += tip + "|base64:" + StringUtils.bytesToBase64(bytes) + "\n"
+            desc += tip + " | base64 ==> " + StringUtils.bytesToBase64(bytes) + "\n"
         }
         return desc
     }
+
+    //获取key打印描述，传入的key是java.security.Key类型
+    function getKeyDesc(key: any) {
+        let desc = ''
+        let reason = ''
+        if (key) {
+            var bytes_key = key.getEncoded();
+            if (bytes_key) {
+                desc += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
+                return desc
+            } else {
+                reason = "bytes_key is null"
+            }
+        } else {
+            reason = "key is null"
+        }
+
+        desc += `秘钥key为空， reason = ${reason} \n`
+        return desc
+    }
+
 
 
     /*--------------------------------------  public  ---------------------------------------------- */
@@ -280,7 +301,7 @@ export namespace AndEncrypt {
 
                 let funcName = "java.security.MessageDigest.digest(byte[] input)"
                 let params = ''
-                params += getParamsPrintDesc(result, "input", PRINT_MODE_STRING | PRINT_MODE_HEX)
+                params += getParamsPrintDesc(a, "input", PRINT_MODE_STRING | PRINT_MODE_HEX)
                 params += getParamsPrintDesc(result, "digest结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
                 new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
@@ -299,7 +320,7 @@ export namespace AndEncrypt {
                 var result = this.$init(a);
                 let funcName = "javax.crypto.spec.IvParameterSpec.init(byte[])"
                 let params = ''
-                params += getParamsPrintDesc(result, "iv向量", PRINT_MODE_STRING | PRINT_MODE_HEX)
+                params += getParamsPrintDesc(a, "iv向量", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
                 new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
                     console.log(HookFuncHandler.logTips.funcParams + params)
@@ -325,16 +346,14 @@ export namespace AndEncrypt {
                 return result;
             }
 
-
             cipher.init.overload('int', 'java.security.Key').implementation = function (a: any, b: any) {
 
                 var result = this.init(a, b);
-                var bytes_key = b.getEncoded();
-
+             
                 let funcName = "javax.crypto.Cipher.init(int operation_mode, Key security_key) "
                 let params = ''
                 params += getModeDesc(a)
-                params += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
+                params += getKeyDesc(b)
 
                 new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
                     console.log(HookFuncHandler.logTips.funcParams + params)
@@ -362,12 +381,11 @@ export namespace AndEncrypt {
             cipher.init.overload('int', 'java.security.Key', 'java.security.spec.AlgorithmParameterSpec').implementation = function (a: any, b: any, c: any) {
 
                 var result = this.init(a, b, c);
-                var bytes_key = b.getEncoded();
 
                 let funcName = "javax.crypto.Cipher.init(int operation_mode, Key, AlgorithmParameterSpec)"
                 let params = ''
                 params += getModeDesc(a)
-                params += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
+                params += getKeyDesc(b)
 
                 new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
                     console.log(HookFuncHandler.logTips.funcParams + params)
@@ -396,12 +414,11 @@ export namespace AndEncrypt {
             cipher.init.overload('int', 'java.security.Key', 'java.security.SecureRandom').implementation = function (a: any, b: any, c: any) {
 
                 var result = this.init(a, b, c);
-                var bytes_key = b.getEncoded();
 
                 let funcName = "javax.crypto.Cipher.init(int operation_mode, Key security_key, SecureRandom secureRandom) "
                 let params = ''
                 params += getModeDesc(a)
-                params += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
+                params += getKeyDesc(b)
 
                 new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
                     console.log(HookFuncHandler.logTips.funcParams + params)
@@ -414,12 +431,11 @@ export namespace AndEncrypt {
             cipher.init.overload('int', 'java.security.Key', 'java.security.AlgorithmParameters').implementation = function (a: any, b: any, c: any) {
 
                 var result = this.init(a, b, c);
-                var bytes_key = b.getEncoded();
 
                 let funcName = "javax.crypto.Cipher.init(int operation_mode, Key security_key, AlgorithmParameters algorithmParameters) "
                 let params = ''
                 params += getModeDesc(a)
-                params += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
+                params += getKeyDesc(b)
 
                 new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
                     console.log(HookFuncHandler.logTips.funcParams + params)
@@ -431,12 +447,12 @@ export namespace AndEncrypt {
             cipher.init.overload('int', 'java.security.Key', 'java.security.AlgorithmParameters', 'java.security.SecureRandom').implementation = function (a: any, b: any, c: any, d: any) {
 
                 var result = this.init(a, b, c, d);
-                var bytes_key = b.getEncoded();
+      
 
                 let funcName = "javax.crypto.Cipher.init(int operation_mode, Key security_key, AlgorithmParameters, SecureRandom) "
                 let params = ''
                 params += getModeDesc(a)
-                params += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
+                params += getKeyDesc(b)
 
                 new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
                     console.log(HookFuncHandler.logTips.funcParams + params)
@@ -449,12 +465,12 @@ export namespace AndEncrypt {
             cipher.init.overload('int', 'java.security.Key', 'java.security.spec.AlgorithmParameterSpec', 'java.security.SecureRandom').implementation = function (a: any, b: any, c: any, d: any) {
 
                 var result = this.init(a, b, c, d);
-                var bytes_key = b.getEncoded();
+  
 
                 let funcName = "javax.crypto.Cipher.init(int operation_mode, Key security_key, AlgorithmParameterSpec, SecureRandom) "
                 let params = ''
                 params += getModeDesc(a)
-                params += getParamsPrintDesc(bytes_key, "秘钥key", PRINT_MODE_STRING | PRINT_MODE_HEX)
+                params += getKeyDesc(b)
 
                 new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
                     console.log(HookFuncHandler.logTips.funcParams + params)
@@ -605,6 +621,48 @@ export namespace AndEncrypt {
 
 
                 return result;
+            }
+
+
+
+            var Signature = Java.use('java.security.Signature')
+            {
+                let overloads_update = Signature.update.overloads
+                for (const overload of overloads_update) {
+                    overload.implementation = function () {
+                        let algorithm = this.getAlgorithm()
+                        let result = this.update(...arguments)
+
+                        let funcName = `java.security.Signature ${overload} `
+                        let params = ''
+                        params += `algorithm = ${algorithm}\n`
+                        params += getParamsPrintDesc(arguments[0], "bytes", PRINT_MODE_STRING | PRINT_MODE_HEX)
+                        params += getParamsPrintDesc(result, "result", PRINT_MODE_STRING | PRINT_MODE_HEX)
+                        
+                        new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                            console.log(HookFuncHandler.logTips.funcParams + params)
+                        }).print();
+
+                    }
+                }
+    
+                let overloads_sign = Signature.sign.overloads
+                for (const overload of overloads_sign) {
+                    overload.implementation = function () {
+
+                        const algorithm = this.getAlgorithm()
+                        let result = this.sign(...arguments)
+
+                        let funcName = `java.security.Signature ${overload} `
+                        let params = ''
+                        params += `algorithm = ${algorithm}\n`
+                        params += getParamsPrintDesc(result, "result_sign", PRINT_MODE_STRING | PRINT_MODE_HEX)
+                        
+                        new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+                            console.log(HookFuncHandler.logTips.funcParams + params)
+                        }).print();
+                    }
+                }
             }
         });
 

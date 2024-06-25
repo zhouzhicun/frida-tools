@@ -11,7 +11,7 @@ export namespace HookFuncHandler {
 
     export const logTips = {
         funcName: "funcName ==> ",
-        funcParams: "funcParams ==> ",
+        funcParams: "funcParams ==>\n",
         funcCallstacks: "funcCallstacks ==>\n",
     }
 
