@@ -77,3 +77,11 @@
 // console.log(`bytesaa = ${bytesaa}`)
 
 
+var hex = "9511168d 393ceaee efb4ed6c 03c60941"
+hex = hex.replace(/\s/g, '');
+console.log("hex = ", hex)
+for (let i = 0; i < hex.length; i += 8) {
+    let subStr = hex.substring(i, i + 8);
+    let hexNumber = parseInt(subStr, 16);
+    console.log("sub = ", subStr, "hexNumber = ", hexNumber, "hex = ", hexNumber.toString(16));
+}
