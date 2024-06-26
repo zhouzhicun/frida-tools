@@ -89,6 +89,8 @@ idautils.DecodeInstruction(ea)
 
 ###################################### demo ####################################################
 
+''' 
+
 def demo_keystore():
     asm_code = "sub sp, sp, #0x10; nop"
     addr = 0x10000
@@ -119,3 +121,6 @@ demo_generate_asm()
 
 print("==================== 3 ==================")
 demo_generate_asm_lite()
+
+
+'''

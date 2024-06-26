@@ -1,27 +1,8 @@
 
-# from typing import TYPE_CHECKING
-# if TYPE_CHECKING:
-#     from ida_hexrays import cfunc_t
-#     from ida_kernwin import view_mouse_event_t
-
-
-
-
 
 import ida_bytes
-import ida_ida
-import ida_segment
-import ida_ua
 import idaapi
-import idautils
 import idc
-
-
-import binascii
-import pyperclip
-
-import flare_emu
-import keystone
 
 from ida_idaapi import plugin_t
 
@@ -85,13 +66,13 @@ def patch_code(startAddr, endAddr, targetAddr):
 def emuRunCode():
     (valid, start, end, regName) = check_code()
     if valid:
-        falreEmuRun(start, end, regName)
+        falreEmuRun.emu_run_code(start, end, regName)
 
 
 def emuRunPatchCode():
     (valid, start, end, regName) = check_code()
     if valid:
-        result = falreEmuRun(start, end, regName)
+        result = falreEmuRun.emu_run_code(start, end, regName)
         patch_code(start, end, result)
 
 

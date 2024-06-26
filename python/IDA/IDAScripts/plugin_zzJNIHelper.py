@@ -1,14 +1,7 @@
 
 import ida_kernwin
-import ida_typeinf
-import idautils
 import idaapi
 import idc
-
-import os
-import sys
-import json
-
 
 import zzPluginBase.jniSignature as jniSignature
 

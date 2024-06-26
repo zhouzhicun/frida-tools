@@ -1,12 +1,6 @@
 
-# from typing import TYPE_CHECKING
-# if TYPE_CHECKING:
-#     from ida_hexrays import cfunc_t
-#     from ida_kernwin import view_mouse_event_t
-
 import idc
 import idaapi
-import ida_lines
 import pyperclip
 
 from ida_idaapi import plugin_t

@@ -1,10 +1,11 @@
 
-import IDA.IDAPlugins.zzPluginBase.utils as utils
+import zzPluginBase.utils as utils
+
 
 
 #修改下面参数，然后运行脚本即可
 hex_string = "0000000000000000000000000000000000000000000000000000000000000000"
-start_addr = 0x8410
+start_addr = 0x3D6F0
 segNameArr = [".text"]
 
 

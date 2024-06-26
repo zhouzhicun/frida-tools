@@ -7,7 +7,9 @@
 ## IDA插件和脚本简介
 
 IDA插件：
-需要放置到 ida/plugins目录下.
+将自实现的IDA插件文件(例如 zzCopyCode.py)和zzPluginBase文件夹 复制到 ida/plugins目录下即可。
+如果插件没提供菜单，则从 Edit -> Plugins 打开; 如果有提供菜单，则可以直接右键打开。
+
 
 IDA脚本：
 执行方式有三种：
@@ -21,8 +23,9 @@ IDA脚本：
 
 ## 本工程介绍
 工程模块化：
-将公共逻辑封装起来，放到util目录下，其他脚本或者插件实现直接import进行复用。
-
+由于脚本执行只能import当前目录下的子目录里的python文件，因此将脚本和插件放到同一目录下，
+封装好的基础代码放在 zzPluginBase子目录下，方面插件和脚本复用。
+脚本文件名以 script_开头， 插件文件名以 plugin_开头。
 
 
 ## python库安装：
