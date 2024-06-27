@@ -11,6 +11,7 @@ import { AndUI } from "../android/utils/AndUI.js";
 import { HookFuncHandler } from "../base/HookFuncHandler.js";
 import { Utils } from "../base/Utils.js";
 
+import * as ssl from "../android/network/sslUnpinning.js"
 
 
 export function main() {
@@ -59,6 +60,9 @@ export function main() {
 
     AndEncrypt.print_config = HookFuncHandler.FuncPrintType.func_params
     AndEncrypt.hook_encrypt()
+
+    ssl.anti_ssl_cronet_32()
+    ssl.droidSSLUnpinning()
 
 
 }

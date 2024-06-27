@@ -5,45 +5,10 @@ import pyperclip
 
 from ida_idaapi import plugin_t
 
-import zzPluginBase.utils as utils
+import zzPluginBase.copyCode as copyCode
+
 
 ###################################  插件逻辑  #############################################
-
-#复制选中的汇编代码
-def copyAsmCode():
-
-    start = idc.read_selection_start()
-    end = idc.read_selection_end()
-    if start == idaapi.BADADDR or end == idaapi.BADADDR:
-        print("No code selected.")
-        return
-
-    # 获取选中的代码
-    code = ""
-    while start < end:
-        line = idc.GetDisasm(start)
-        code += line + "\n"
-        start += 4
-
-    # 使用 pyperclip 复制代码
-    print("selected asm code: \n", code)
-    pyperclip.copy(code)
-
-
-#复制选中的机器码
-def copyMachineCode():
-
-    start = idc.read_selection_start()
-    end = idc.read_selection_end()
-
-    if (start != idaapi.BADADDR) and (end != idaapi.BADADDR):
-        codeBytes = idc.get_bytes(start, end - start)
-        codeStr = utils.hexStrFromBytes(codeBytes)
-
-        # 使用 pyperclip 复制代码
-        print("selected machine code: \n", codeStr)
-        pyperclip.copy(codeStr)
-
 
 
 class CopyAsmCodeHandler(idaapi.action_handler_t):
@@ -52,7 +17,7 @@ class CopyAsmCodeHandler(idaapi.action_handler_t):
         idaapi.action_handler_t.__init__(self)
 
     def activate(self, ctx):
-        copyAsmCode()
+        copyCode.copyAsmCode()
         return 1
 
     def update(self, ctx):
@@ -64,7 +29,20 @@ class CopyMachineCodeHandler(idaapi.action_handler_t):
         idaapi.action_handler_t.__init__(self)
 
     def activate(self, ctx):
-        copyMachineCode()
+        copyCode.copyMachineCode()
+        return 1
+
+    def update(self, ctx):
+        return idaapi.AST_ENABLE_ALWAYS
+    
+
+class GenEmuScriptHandler(idaapi.action_handler_t):
+
+    def __init__(self):
+        idaapi.action_handler_t.__init__(self)
+
+    def activate(self, ctx):
+        copyCode.genEmuRunScript()
         return 1
 
     def update(self, ctx):
@@ -76,6 +54,7 @@ class CopyMachineCodeHandler(idaapi.action_handler_t):
 menu_main = 'zzCopyCode/'
 menu_copy_asm = 'my:copy_asm_code'
 menu_copy_machine = 'my:copy_machine_code'
+menu_gen_emu_script = 'my:gen_emu_script_code'
 
 class MyUIHooks(idaapi.UI_Hooks):
 
@@ -83,6 +62,7 @@ class MyUIHooks(idaapi.UI_Hooks):
         if idaapi.get_widget_type(widget) == idaapi.BWN_DISASM:
             idaapi.attach_action_to_popup(widget, popup_handle, menu_copy_asm, menu_main)
             idaapi.attach_action_to_popup(widget, popup_handle, menu_copy_machine, menu_main)
+            idaapi.attach_action_to_popup(widget, popup_handle, menu_gen_emu_script, menu_main)
 
 
 class CopyCodePlugin(plugin_t):
@@ -104,6 +84,8 @@ class CopyCodePlugin(plugin_t):
         idaapi.register_action(copy_asm_code_action_desc)
         copy_machine_code_action_desc = idaapi.action_desc_t(menu_copy_machine, '复制选中的machineCode', CopyMachineCodeHandler(), '', '')
         idaapi.register_action(copy_machine_code_action_desc)
+        gen_emu_script_action_desc = idaapi.action_desc_t(menu_gen_emu_script, '生成选中指令的模拟执行脚本', GenEmuScriptHandler(), '', '')
+        idaapi.register_action(gen_emu_script_action_desc)
 
         global my_ui_hooks
         my_ui_hooks = MyUIHooks()
