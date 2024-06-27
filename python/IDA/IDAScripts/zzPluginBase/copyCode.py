@@ -33,27 +33,35 @@ def check_code():
         print("No code selected.")
         return invalid
 
-    regName = get_regName(end - 4)
+    last = end - 4
+    regName = get_regName(last)
     if len(regName) < 1:
         print("not BR reg, please check~")
         return invalid
     
-    return (1, start, end, regName)
+    return (1, start, last, regName)
 
 
-#patch指令: 将BR Xn patch为 B 0xXXXX;  并添加注释
-def patch_code(insnAddr, targetAddr):
+
+
+#patch指令: nop掉前面N-1条指令， patch最后一条将BR Xn patch为 B 0xXXXX;  并添加注释
+def patch_code(startInsnAddr, endInsnAddr, targetAddr):
     
-    disasm = idc.GetDisasm(insnAddr)
+    disasm = idc.GetDisasm(endInsnAddr)
 
-    #1.patch
+    #1.NOP掉前面N-1条指令
+    nopInsnCount = int((endInsnAddr - startInsnAddr) / 4)
+    nopCodeBytes = keycap.generate_code("nop", 0)
+    ida_bytes.patch_bytes(startInsnAddr, bytes(nopCodeBytes) * nopInsnCount)
+
+    #1.patch最后一条指令
     code = f"B {hex(targetAddr)}"
-    codeBytes =  keycap.generate_code(code, insnAddr)
-    ida_bytes.patch_bytes(insnAddr, bytes(codeBytes))
-    print("patch code => " +  hex(insnAddr) + " : " + code)
+    codeBytes =  keycap.generate_code(code, endInsnAddr)
+    ida_bytes.patch_bytes(endInsnAddr, bytes(codeBytes))
+    print("patch code => " +  hex(endInsnAddr) + " : " + code)
 
     #2.添加注释
-    idaapi.set_cmt(insnAddr, disasm, 0)
+    idaapi.set_cmt(endInsnAddr, disasm, 0)
 
 
 ###################################  复制代码 #############################################
@@ -123,7 +131,7 @@ def genEmuRunScript():
     regName = "%s"
 
     result = flareEmuRun.emu_run_code(start, end, regName)
-    copyCode.patch_code(end, result)
+    copyCode.patch_code(start, end, result)
     '''
 
     unicorn_run_script = '''

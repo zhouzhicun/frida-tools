@@ -11,7 +11,7 @@ import { AndUI } from "../android/utils/AndUI.js";
 import { HookFuncHandler } from "../base/HookFuncHandler.js";
 import { Utils } from "../base/Utils.js";
 
-import * as ssl from "../android/network/sslUnpinning.js"
+import * as ssl from "../android/network/AndSSLUnpinning.js"
 
 
 export function main() {
