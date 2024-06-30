@@ -1,5 +1,6 @@
 
 
+import binascii
 import hashlib
 import hmac
 import base64
@@ -7,277 +8,138 @@ import base64
 # pip uninstall crypto
 # pip uninstall pycryptodome
 # pip install pycryptodome
-from Crypto.Cipher import AES
-
+from Crypto.Cipher import AES, DES, DES3, ARC4, PKCS1_v1_5
+from Crypto.PublicKey import RSA
+from Crypto import Random
+from Crypto.Hash import SHA1
+from Crypto.Protocol.KDF import PBKDF2
 
 import encryptUtils as eu
 
+
+
+'''
+参考文档：
+【爬虫知识】爬虫常见加密解密算法
+https://mp.weixin.qq.com/s?__biz=MzkyMzcxMDM0MQ==&mid=2247500487&idx=1&sn=a4c5f203fd42fdd8c7ff4d4e144f0d1b&source=41#wechat_redirect
+
+CTF&爬虫：掌握这些特征，一秒识别密文加密方式
+https://www.cnblogs.com/ikdl/p/15802507.html
+
+'''
+
+
+
 class ZZCrypto:
 
-############################ Base系列: 支持base16,32, 64, 85  ############################
+
+    ############################ DES3加解密（mode = DES3.MODE_OFB）  ############################
 
     @classmethod
-    def base16_encode(cls, data):
-        return eu.data_to_str(base64.b16encode(data))
-
-    @classmethod
-    def base32_encode(cls, data):
-        return eu.data_to_str(base64.b32encode(data))
-
-    @classmethod
-    def base64_encode(cls, data):
-        return eu.data_to_str(base64.b64encode(data))
-
-    @classmethod
-    def base85_encode(cls, data):
-        return eu.data_to_str(base64.b85encode(data))
-    
-
-
-    @classmethod
-    def base16_decode(cls, str):
-        return base64.b16decode(eu.str_to_data(str))
+    def des3_encrypt(cls, keyData, plainText, ivData):
+        des_encrypt = DES3.new(eu.pad_to_16_data(keyData), mode=DES3.MODE_OFB, iv=ivData)
+        resultBytes = des_encrypt.encrypt(eu.pad_to_16_str(plainText))
+        return resultBytes
     
     @classmethod
-    def base32_decode(cls, str):
-        return base64.b32decode(eu.str_to_data(str))
-    
-    
-    @classmethod
-    def base64_decode(cls, str):
-        return base64.b64decode(eu.str_to_data(str))
-    
-    @classmethod
-    def base85_decode(cls, str):
-        return base64.b85decode(eu.str_to_data(str))
-    
-
-
-############################ sha系列  ############################
-
-    #MD5：传入data, 返回字符串
-    @classmethod
-    def md5(cls, data):
-        m = hashlib.md5()
-        m.update(data)
-        return m.hexdigest()
-        
-    @classmethod
-    def sha1(cls, data):
-        sha = hashlib.sha1()
-        sha.update(data)
-        return sha.hexdigest()
-    
-    @classmethod
-    def sha2_224(cls, data):
-        sha = hashlib.sha224()
-        sha.update(data)
-        return sha.hexdigest()
-    
-    @classmethod
-    def sha2_256(cls, data):
-        sha = hashlib.sha256()
-        sha.update(data)
-        return sha.hexdigest()
-    
-    @classmethod
-    def sha2_384(cls, data):
-        sha = hashlib.sha384()
-        sha.update(data)
-        return sha.hexdigest()
-    
-    @classmethod
-    def sha2_512(cls, data):
-        sha = hashlib.sha512()
-        sha.update(data)
-        return sha.hexdigest()
-    
-    @classmethod
-    def sha3_224(cls, data):
-        sha = hashlib.sha3_224()
-        sha.update(data)
-        return sha.hexdigest()
-    
-    @classmethod
-    def sha3_256(cls, data):
-        sha = hashlib.sha3_256()
-        sha.update(data)
-        return sha.hexdigest()
-    
-    @classmethod
-    def sha3_384(cls, data):
-        sha = hashlib.sha3_384()
-        sha.update(data)
-        return sha.hexdigest()
-    
-    @classmethod
-    def sha3_512(cls, data):
-        sha = hashlib.sha3_512()
-        sha.update(data)
-        return sha.hexdigest()
-    
-
-############################ hmac系列  ############################
-
-    @classmethod
-    def hmac_md5(cls, keyData, data):
-        mac = hmac.new(keyData, data, hashlib.md5)
-        return mac.hexdigest()
-    
-    @classmethod
-    def hmac_sha1(cls, keyData, data):
-        mac = hmac.new(keyData, data, hashlib.sha1)
-        return mac.hexdigest()
-    
-    @classmethod
-    def hmac_sha2_224(cls, keyData, data):
-        mac = hmac.new(keyData, data, hashlib.sha224)
-        return mac.hexdigest()
-    
-    @classmethod
-    def hmac_sha2_256(cls, keyData, data):
-        mac = hmac.new(keyData, data, hashlib.sha256)
-        return mac.hexdigest()
-    
-    @classmethod
-    def hmac_sha2_384(cls, keyData, data):
-        mac = hmac.new(keyData, data, hashlib.sha384)
-        return mac.hexdigest()
-    
-    @classmethod
-    def hmac_sha2_512(cls, keyData, data):
-        mac = hmac.new(keyData, data, hashlib.sha512)
-        return mac.hexdigest()
-    
-
-    @classmethod
-    def hmac_sha3_224(cls, keyData, data):
-        mac = hmac.new(keyData, data, hashlib.sha3_224)
-        return mac.hexdigest()
-    
-    @classmethod
-    def hmac_sha3_256(cls, keyData, data):
-        mac = hmac.new(keyData, data, hashlib.sha3_256)
-        return mac.hexdigest()
-    
-    @classmethod
-    def hmac_sha3_384(cls, keyData, data):
-        mac = hmac.new(keyData, data, hashlib.sha3_384)
-        return mac.hexdigest()
-    
-    @classmethod
-    def hmac_sha3_512(cls, keyData, data):
-        mac = hmac.new(keyData, data, hashlib.sha3_512)
-        return mac.hexdigest()
-    
+    def des3_decrypt(cls, keyData, cipherBytes, ivData=None):
+        des_decrypt = DES3.new(eu.pad_to_16_data(keyData), mode=DES3.MODE_OFB, iv=ivData)
+        resultBytes = des_decrypt.decrypt(cipherBytes)
+        return resultBytes
     
 
     
+
+    ############################ RC4加解密  ############################
+
+    @classmethod
+    def rc4_encrypt(cls, key, text):
+        enc = ARC4.new(key.encode('utf8'))
+        res = enc.encrypt(text.encode('utf-8'))
+        res = base64.b64encode(res)
+        return res
+
+    @classmethod
+    def rc4_decrypt(cls, key, base64CipherData):
+        data = base64.b64decode(base64CipherData)
+        enc = ARC4.new(key.encode('utf8'))
+        res = enc.decrypt(data)
+        return res
+    
+ 
+
+
+    ############################ RSA加解密（rsa每次公钥加密返回不同结果）  ############################
+
+    @classmethod
+    def genRSAKey(self):
+        rsaKey = RSA.generate(1024)
+        publicKey = rsaKey.publickey().export_key()
+        privateKey = rsaKey.export_key()
+        return publicKey, privateKey
+
+    #key：公钥(字符串或者bytes)，plainText：明文字符串
+    #返回：base64的密文字符串
+    @classmethod
+    def rsa_encrypt(cls, publicKey, plainText):
+        rsa_key = RSA.importKey(publicKey)
+        cipher = PKCS1_v1_5.new(rsa_key)
+        base64CipherText = base64.b64encode(cipher.encrypt(eu.str_to_data(plainText)))
+        return eu.data_to_str(base64CipherText)
+
+    #key：私钥(字符串或者bytes)，base64CipherText：base64的密文字符串   
+    #返回：明文字符串
+    @classmethod
+    def rsa_decrypt(cls, privateKey, base64CipherText):
+        rsa_key = RSA.importKey(privateKey)
+        cipher = PKCS1_v1_5.new(rsa_key)
+        plainText = cipher.decrypt(base64.b64decode(eu.str_to_data(base64CipherText)), None)
+        return eu.data_to_str(plainText)
+    
+
+
+
 
 
 # ####################################################################################
 
-#     # AES加密方法, 传入data, 返回Base64字符串; 如果需要iv(),
-#     @classmethod
-#     def aes_encrypt(cls, keyData, plainData, mode=AES.MODE_ECB, ivData=None):
-#         if ivData is not None:
-#             ivData = pad_to_16_data(ivData)
-#         aes = AES.new(pad_to_16_data(keyData), mode, iv=ivData)
-#         encrypt_aes = aes.encrypt(pad_to_16_data(plainData))
-#         encrypted_text = data_to_str(base64.encodebytes(encrypt_aes))
-#         return encrypted_text
 
-#     # AES解密方法: 传入data, 返回Base64字符串
-#     @classmethod    
-#     def aes_decrypt(cls, keyData, cipherData, mode=AES.MODE_ECB, ivData=None):
-#         if ivData is not None:
-#             ivData = pad_to_16_data(ivData)
-#         aes = AES.new(pad_to_16_data(keyData), mode, iv=ivData) 
-#         base64_decrypted = base64.decodebytes(pad_to_16_data(cipherData)) 
-#         decrypted_text = data_to_str(aes.decrypt(base64_decrypted)).replace('\0', '')
-#         return decrypted_text
+def des3_test():
+    print("===================== DES3 加解密 ===========================")
+    text = 'I love Python!'
+    keyData = b'12345678'
+    iv = Random.new().read(DES3.block_size)
+    resultBytes = ZZCrypto.des3_encrypt(keyData, text, iv)
+    print("des3加密：", resultBytes)
+    resultBytes = ZZCrypto.des3_decrypt(keyData, resultBytes, iv)
+    print("des3解密:", resultBytes)
 
 
+def rc4_test():
+    print("===================== RC4 加解密 ===========================")
+    secret_key = '12345678'   # 密钥
+    text = 'I love Python!'   # 加密对象
+    encrypted_str = ZZCrypto.rc4_encrypt(secret_key, text)
+    print('加密字符串：', encrypted_str)
+    decrypted_str = ZZCrypto.rc4_decrypt(secret_key, encrypted_str)
+    print('解密字符串：', decrypted_str)
 
 
-##################################### 加解密demo #############################################
+def rsa_test():
+    print("===================== RSA 加解密 ===========================")
+    publicKey, privateKey = ZZCrypto.genRSAKey()
+    print("publicKey = ", publicKey)
+    print("privateKey = ", privateKey)
+    text = "hello, world"
+    cipherText = ZZCrypto.rsa_encrypt(publicKey, text)
+    print("cipherText = ", cipherText)
+    plainText = ZZCrypto.rsa_decrypt(privateKey, cipherText)
+    print("plainText = ", plainText)
 
 
+def crypto_test():
+    des3_test()
+    rc4_test()
+    rsa_test()
 
-print("========================== base编码与反编码系列 ===============================")
-
-strData = b"hello, world"
-
-a16 = ZZCrypto.base16_encode(strData)
-a32 = ZZCrypto.base32_encode(strData)
-a64 = ZZCrypto.base64_encode(strData)
-a85 = ZZCrypto.base85_encode(strData)
-print("a16 = ", a16)
-print("a32 = ", a32)
-print("a64 = ", a64)
-print("a85 = ", a85)
-
-b16 = ZZCrypto.base16_decode(a16)
-b32 = ZZCrypto.base32_decode(a32)
-b64 = ZZCrypto.base64_decode(a64)
-b85 = ZZCrypto.base85_decode(a85)
-print("a16 = ", b16)
-print("a32 = ", b32)
-print("a64 = ", b64)
-print("a85 = ", b85)
-
-print("========================== sha系列 ===============================")
-
-
-
-c1 = ZZCrypto.sha1(strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.sha2_224(strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.sha2_256(strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.sha2_384(strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.sha2_512(strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.sha3_224(strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.sha3_256(strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.sha3_384(strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.sha3_512(strData)
-print("c1 = ", c1)
-
-print("========================== hmac系列 ===============================")
-
-keyData = b"123456"
-strData = b"hello, world"
-
-c1 = ZZCrypto.hmac_md5(keyData, strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.hmac_sha1(keyData, strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.hmac_sha2_224(keyData, strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.hmac_sha2_256(keyData, strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.hmac_sha2_384(keyData, strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.hmac_sha2_512(keyData, strData)
-print("c1 = ", c1)
-
-c1 = ZZCrypto.hmac_sha3_224(keyData, strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.hmac_sha3_256(keyData, strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.hmac_sha3_384(keyData, strData)
-print("c1 = ", c1)
-c1 = ZZCrypto.hmac_sha3_512(keyData, strData)
-print("c1 = ", c1)
-
-
-
-
-
-
+crypto_test()
