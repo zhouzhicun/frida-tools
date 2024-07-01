@@ -1,7 +1,4 @@
-
-package com.zz.cyrpto;
-
-public class md5 {
+public class MD5 {
 
     static final String[] hexs = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F" };
 
@@ -35,12 +32,8 @@ public class md5 {
     // java不支持无符号的基本数据（unsigned）
     private long[] result = { A, B, C, D };// 存储hash结果，共4×32=128位，初始化值为（幻数的级联）
 
-    public static void main(String[] args) {
-        md5 md = new md5();
-        System.out.println("md5(abc)=" + md.digest("admin"));
-    }
-    
-    private String digest(String inputStr) {
+
+    public String digest(String inputStr) {
         byte[] inputBytes = inputStr.getBytes();
         int byteLen = inputBytes.length;// 长度（字节）
         int groupCount = 0;// 完整分组的个数
@@ -271,4 +264,5 @@ public class md5 {
         a += b;
         return (a & 0xFFFFFFFFL);
     }
+
 }

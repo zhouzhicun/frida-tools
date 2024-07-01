@@ -4,7 +4,7 @@ import idc
 import idautils
 import zzPluginBase.jniSignature as jniSignature
 
-###################################### 脚本逻辑 ################################################
+###################################### patch静态注册的JNI方法-脚本逻辑 ################################################
 
 
 def load_methods(clsName, methods):
@@ -70,9 +70,6 @@ def patch(clsName, methods):
 
     print('JNI functions patch failed ==> \n {}'.format(failed))
     idc.set_ida_state(st)
-
-
-
 
 
 
