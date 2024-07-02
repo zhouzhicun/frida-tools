@@ -12,6 +12,7 @@ import { HookFuncHandler } from "../base/HookFuncHandler.js";
 import { Utils } from "../base/Utils.js";
 
 import * as ssl from "../android/network/AndSSLUnpinning.js"
+import * as fridaTrace from "../base/FridaTrace.js"
 
 
 export function main() {
@@ -58,11 +59,18 @@ export function main() {
     // });
 
 
-    AndEncrypt.print_config = HookFuncHandler.FuncPrintType.func_params
-    AndEncrypt.hook_encrypt()
+    // AndEncrypt.print_config = HookFuncHandler.FuncPrintType.func_params
+    // AndEncrypt.hook_encrypt()
+    // ssl.anti_ssl_cronet_32()
+    // ssl.droidSSLUnpinning()
 
-    ssl.anti_ssl_cronet_32()
-    ssl.droidSSLUnpinning()
 
+
+    //trace用法：
+    SOUtils.hook_dlopen("libencrypt.so", function () {
+
+    }, function() {
+        fridaTrace.traceInsnAddr("libencrypt.so", 0x3D1A0)
+    });
 
 }
