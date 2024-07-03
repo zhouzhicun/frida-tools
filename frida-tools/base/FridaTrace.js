@@ -1,8 +1,28 @@
 
 
 /**
+ * 指令trace
  * 仓库地址：https://github.com/Virenz/frida-js/
+ * 
+ 
+如何使用：
+1.导入文件：
+import * as fridaTrace from "../base/FridaTrace.js"
+
+2.添加trace代码：
+
+SOUtils.hook_dlopen("libencrypt.so", function () {
+    //onEnter
+}, function() {
+    //onLeave
+    fridaTrace.traceInsnAddr("libencrypt.so", 0x3D1A0)
+});
+ 
+
  */
+
+
+
 
 
 

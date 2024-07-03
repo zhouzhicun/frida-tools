@@ -13,6 +13,9 @@ import { Utils } from "../base/Utils.js";
 
 import * as ssl from "../android/network/AndSSLUnpinning.js"
 import * as fridaTrace from "../base/FridaTrace.js"
+import * as r0tracer from "../base/r0tracer.js"
+
+
 
 
 export function main() {
@@ -66,11 +69,15 @@ export function main() {
 
 
 
-    //trace用法：
-    SOUtils.hook_dlopen("libencrypt.so", function () {
+    r0tracer.configLite(true);
+    r0tracer.hookALL();
 
-    }, function() {
-        fridaTrace.traceInsnAddr("libencrypt.so", 0x3D1A0)
-    });
+    // //trace用法：
+    // SOUtils.hook_dlopen("libencrypt.so", function () {
+    //     //onEnter
+    // }, function() {
+    //     //onLeave
+    //     fridaTrace.traceInsnAddr("libencrypt.so", 0x3D1A0)
+    // });
 
 }
