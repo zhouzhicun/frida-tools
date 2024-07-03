@@ -15,6 +15,7 @@ import * as ssl from "../android/network/AndSSLUnpinning.js"
 import * as fridaTrace from "../base/FridaTrace.js"
 import * as r0tracer from "../base/r0tracer.js"
 
+import * as jtrace from "../android/jtrace/jtrace.js"
 
 
 
@@ -69,8 +70,12 @@ export function main() {
 
 
 
-    r0tracer.configLite(true);
-    r0tracer.hookALL();
+    // r0tracer.configLite(true);
+    // r0tracer.hookALL();
+
+    
+    jtrace.configShowCacheLog(false)
+    jtrace.hook_all_jni()
 
     // //trace用法：
     // SOUtils.hook_dlopen("libencrypt.so", function () {
