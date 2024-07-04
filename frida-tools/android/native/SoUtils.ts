@@ -1,9 +1,15 @@
 
+import { arm64SyscallTable } from "../../base/arm64SyscallTable.js";
 import { Utils } from "../../base/Utils.js";
 
 export namespace SOUtils {
 
     /************************************** helper **************************************************** */
+
+    export function print_soinfo(soName: string) {
+        var targetModule = Process.findModuleByName(soName);
+        console.log("get_soinfo ==>" + soName + " base = " + targetModule.base + "size = " + targetModule.size)
+    }
 
     //获取真实地址
     export function get_addr(soName: string, offset: number) {
@@ -259,6 +265,33 @@ export namespace SOUtils {
         points.forEach((addr) => {
             Interceptor.attach(base_addr.add(addr), {
                 onEnter: function () {
+                    console.log("hit svc watch_point = " + addr);
+                    Utils.print_native_callstacks(this.context);
+                }
+            });
+        })
+
+    }
+
+
+    function get_syscall_desc(context: Arm64CpuContext) {
+        let syscallNum = context.x8.toString(10) //转成10进制字符串
+        return arm64SyscallTable.get(syscallNum)
+    }
+
+    export function watch_svc_points(soName: string, points: number[]) {
+
+        var base_addr = Module.findBaseAddress(soName);
+        points.forEach((addr) => {
+            Interceptor.attach(base_addr.add(addr), {
+                onEnter: function () {
+                    console.log("hit svc watch_point = " + addr);
+                    
+                    // var contextStr = JSON.stringify(this.context)
+                    // console.log("context = \n" + contextStr);
+
+                    let x8 = get_syscall_desc(this.context as Arm64CpuContext)
+                    console.log("syscall = " + x8)
                     Utils.print_native_callstacks(this.context);
                 }
             });
@@ -318,7 +351,7 @@ export namespace SOUtils {
                         //遍历执行该基本块的所有指令
                         do {
                             if (isModule) {
-
+                         
                                 var inst_offset_addr = instruction.address.sub(base_addr)
                                 console.log(inst_offset_addr + "\t:\t" + instruction);
 

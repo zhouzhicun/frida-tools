@@ -39,6 +39,59 @@ export namespace Utils {
 
 
 
+
+    /**
+     * 打印指定层数的栈信息（8字节为一层），并输出 module 信息 (如果有）
+     * @param {CpuContext} context
+     * @param {number} number
+     */
+    export function showStacksModInfo(context: CpuContext, number: number) {
+        var sp: NativePointer = context.sp;
+
+        for (var i = 0; i < number; i++) {
+            var curSp = sp.add(Process.pointerSize * i);
+            console.log('showStacksModInfo curSp: ' + curSp + ', val: ' + curSp.readPointer()
+                + ', module: ' + getModuleByAddr(curSp.readPointer()));
+        }
+    }
+
+      /**
+     * 根据地址获取模块信息
+     * @param {NativePointer} addr
+     * @returns {string}
+     */
+      export function getModuleByAddr(addr: NativePointer): Module | null {
+        var result = null;
+        Process.enumerateModules().forEach(function (module: Module) {
+            if (module.base <= addr && addr <= (module.base.add(module.size))) {
+                result = JSON.stringify(module);
+                return false; // 跳出循环
+            }
+        });
+        return result;
+    }
+    
+
+
+    /**
+     * 获取 LR 寄存器值
+     * @param {CpuContext} context
+     * @returns {NativePointer}
+     */
+    export function getLR(context: CpuContext) {
+        if (Process.arch == 'arm') {
+            return (context as ArmCpuContext).lr;
+        }
+        else if (Process.arch == 'arm64') {
+            return (context as Arm64CpuContext).lr;
+        }
+        else {
+            console.log('not support current arch: ' + Process.arch);
+        }
+        return ptr(0);
+    }
+
+
     /************************* 内存读写 ******************************** */
 
     export function readMemory(startAddr: any, size: any) {
@@ -50,6 +103,22 @@ export namespace Utils {
     export function writeMemory(startAddr: any, str: any) {
         Memory.protect(startAddr, str.length, 'rwx');
         startAddr.writeAnsiString(str);
+    }
+
+
+ /*********************************** 函数处理 ******************************************** */
+    
+    export function getFuncPtr(funcName: string) {
+        const funcPtr = Module.findExportByName(null, funcName);
+        console.log("getFuncPtr ==>" + funcName + " : " + funcPtr);
+        return funcPtr;
+    }
+
+    export function replaceFunc(funcName: string, callBack: NativePointerValue) {
+        let funcPtr = getFuncPtr(funcName);
+        if(funcPtr){
+            Interceptor.replace(funcPtr, callBack);
+        }
     }
 
 
@@ -148,13 +217,31 @@ export namespace Utils {
         });
     }
 
+    export function patchFunc64_by_offset(soName: string, offset: number) {
+        let targetModule = Process.findModuleByName(soName);
+        let funcBaseAddr = targetModule.base.add(offset);
+        Memory.patchCode(funcBaseAddr, 4, code => {
+            const cw = new Arm64Writer(code, { pc: funcBaseAddr });
+            cw.putRet();
+            cw.flush();
+        });
+    }
+
     /**
      * 
      * @param funcBaseAddrArr 批量patch函数
      */
-    export function patchFunc64_batch(funcBaseAddrArr: NativePointer[]) {
-        for (let i = 0; i < funcBaseAddrArr.length; i++) {
-            patchFunc64(funcBaseAddrArr[i])
+    export function patchFunc64_batch(funcAddrArr: NativePointer[]) {
+        for (let i = 0; i < funcAddrArr.length; i++) {
+            patchFunc64(funcAddrArr[i])
+        }
+    }
+
+    export function patchFunc64_batch_by_offset(soName: string, funcOffsetAddrArr: number[]) {
+
+        let targetModule = Process.findModuleByName(soName);
+        for (let i = 0; i < funcOffsetAddrArr.length; i++) {
+            patchFunc64(targetModule.base.add(funcOffsetAddrArr[i]))
         }
     }
 

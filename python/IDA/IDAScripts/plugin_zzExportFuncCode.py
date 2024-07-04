@@ -37,7 +37,7 @@ def getSegAddr():
     return min(textStart), max(textEnd)
 
 
-class traceNatives(plugin_t):
+class ExportFuncCode(plugin_t):
     flags = PLUGIN_PROC
     comment = "export_func_code"
     help = ""
@@ -81,4 +81,4 @@ class traceNatives(plugin_t):
 
 
 def PLUGIN_ENTRY():
-    return traceNatives()
+    return ExportFuncCode()

@@ -42,16 +42,17 @@ def patchBytes(start_addr, hexstr):
 获取指定节的地址范围
 '''
 def getSegmentAddrRange(segName):
-    start = ida_ida.inf_get_min_ea()
-    size = ida_ida.inf_get_max_ea() - start
+    start = 0
+    size = 0
     
     # 将地址范围限定于指定节
-    for seg in idautils.Segments():
-        seg = idaapi.getseg(seg)
-        segName = ida_segment.get_segm_name(seg)
-        if segName == segName:
-            start = seg.start_ea
-            size = seg.size()
+    for segIndex in idautils.Segments():
+        temp_seg = idaapi.getseg(segIndex)
+        temp_segName = ida_segment.get_segm_name(temp_seg)
+        if temp_segName == segName:
+            start = temp_seg.start_ea
+            size = temp_seg.size()
+            break
     return start, size
 
 
