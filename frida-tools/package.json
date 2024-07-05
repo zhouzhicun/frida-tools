@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Example Frida agent written in TypeScript",
   "private": true,
-  "main": "agent/index.ts",
+  "main": "agent/main.ts",
   "scripts": {
     "prepare": "npm run build",
-    "build": "frida-compile agent/index.ts -o _agent.js -c",
-    "watch": "frida-compile agent/index.ts -o _agent.js -w"
+    "build": "frida-compile agent/main.ts -o app.js -c",
+    "watch": "frida-compile agent/main.ts -o app.js -w"
   },
   "devDependencies": {
     "@types/frida-gum": "^18.5.1",

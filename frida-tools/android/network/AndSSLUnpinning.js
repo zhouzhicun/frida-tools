@@ -139,6 +139,14 @@ export function anti_ssl_cronet_32() {
 
 
 
+
+/**
+ * droidSSLUnpinning
+ * 
+ * 仓库地址：https://github.com/WooyunDota/DroidSSLUnpinning
+ * 
+ */
+
 export function droidSSLUnpinning() {
 
     Java.perform(function () {

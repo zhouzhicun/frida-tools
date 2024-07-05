@@ -22,15 +22,11 @@ SOUtils.hook_dlopen("libencrypt.so", function () {
  */
 
 
-
-
-
-
 let pre_regs = [];
 let infoMap = new Map();
 let detailInsMap = new Map();
 let regs_map = new Map();
-console.log("-------------- frida trace 初始化 --------------------")
+console.log("-------------- frida stalkertrace 初始化 --------------------")
 
 function formatArm64Regs(context) {
     let regs = []

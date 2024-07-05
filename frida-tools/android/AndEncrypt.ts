@@ -1,13 +1,13 @@
 
 
-import { HookFuncHandler } from "../../base/HookFuncHandler.js";
-import { StringUtils } from "../../base/StringUtils.js";
+import { Base } from "../base/zzBase.js";
+
 
 export namespace AndEncrypt {
 
     /*--------------------------------------  config ---------------------------------------------- */
 
-    export let print_config = HookFuncHandler.FuncPrintType.func_params
+    export let print_config = Base.zzHookFuncHandler.FuncPrintType.func_params
 
 
     /*--------------------------------------  private  ---------------------------------------------- */
@@ -18,7 +18,7 @@ export namespace AndEncrypt {
 
     //参数打印方式
     const PRINT_MODE_STRING = 0x000001;
-    const PRINT_MODE_HEX    = 0x000010;
+    const PRINT_MODE_HEX = 0x000010;
     const PRINT_MODE_BASE64 = 0x000100;
 
     //获取加密模式描述
@@ -39,13 +39,13 @@ export namespace AndEncrypt {
 
         let desc = ''
         if (mode & PRINT_MODE_STRING) {
-            desc += tip + " | str ==> " + StringUtils.bytesToString(bytes) + "\n"
+            desc += tip + " | str ==> " + Base.zzStringUtils.bytesToString(bytes) + "\n"
         }
         if (mode & PRINT_MODE_HEX) {
-            desc += tip + " | hex ==> " + StringUtils.bytesToHex(bytes) + "\n"
+            desc += tip + " | hex ==> " + Base.zzStringUtils.bytesToHex(bytes) + "\n"
         }
         if (mode & PRINT_MODE_BASE64) {
-            desc += tip + " | base64 ==> " + StringUtils.bytesToBase64(bytes) + "\n"
+            desc += tip + " | base64 ==> " + Base.zzStringUtils.bytesToBase64(bytes) + "\n"
         }
         return desc
     }
@@ -70,6 +70,11 @@ export namespace AndEncrypt {
         return desc
     }
 
+    function log(funcName: any, params: any) {
+        new Base.zzHookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+            console.log(Base.zzHookFuncHandler.logTips.funcParams + params)
+        }).print();
+    }
 
 
     /*--------------------------------------  public  ---------------------------------------------- */
@@ -91,10 +96,7 @@ export namespace AndEncrypt {
                 params += "算法名：" + b + "\n"
                 params += getParamsPrintDesc(a, "密钥", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
-
+                log(funcName, params)
                 return result;
             }
 
@@ -111,11 +113,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += getParamsPrintDesc(bytes_key_des, "des密钥", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
-
-
+                log(funcName, params)
                 return result;
             }
 
@@ -128,10 +126,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += getParamsPrintDesc(bytes_key_des, "des密钥", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
-
+                log(funcName, params)
                 return result;
             }
 
@@ -147,10 +142,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += "算法名：" + a + "\n"
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
-
+                log(funcName, params)
                 return result;
             }
 
@@ -163,9 +155,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += getParamsPrintDesc(a, "update input", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
             }
 
@@ -180,9 +170,7 @@ export namespace AndEncrypt {
                 params += "offset = " + b + "\n"
                 params += "len = " + c + "\n"
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
             }
 
 
@@ -194,11 +182,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += getParamsPrintDesc(result, "doFinal结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
-
-
+                log(funcName, params)
                 return result;
             }
 
@@ -213,11 +197,7 @@ export namespace AndEncrypt {
                 params += getParamsPrintDesc(a, "input", PRINT_MODE_STRING | PRINT_MODE_HEX)
                 params += getParamsPrintDesc(result, "doFinal结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
-
-
+                log(funcName, params)
                 return result;
             }
 
@@ -230,10 +210,8 @@ export namespace AndEncrypt {
                 let funcName = "java.security.MessageDigest.getInstance(String algorithm, String provider)"
                 let params = ''
                 params += "算法名：" + a + "\n"
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
 
+                log(funcName, params)
                 return this.getInstance(a, b);
             }
 
@@ -243,10 +221,8 @@ export namespace AndEncrypt {
                 let funcName = "java.security.MessageDigest.getInstance(String algorithm)"
                 let params = ''
                 params += "算法名：" + a + "\n"
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
 
+                log(funcName, params)
                 return this.getInstance(a);
             }
 
@@ -257,9 +233,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += getParamsPrintDesc(a, "input", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return this.update(a);
             }
@@ -272,9 +246,7 @@ export namespace AndEncrypt {
                 params += "offset = " + b + "\n"
                 params += "len = " + c + "\n"
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return this.update(a, b, c);
             }
@@ -288,9 +260,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += getParamsPrintDesc(result, "digest结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
                 return result;
             }
 
@@ -304,9 +274,7 @@ export namespace AndEncrypt {
                 params += getParamsPrintDesc(a, "input", PRINT_MODE_STRING | PRINT_MODE_HEX)
                 params += getParamsPrintDesc(result, "digest结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
 
                 return result;
@@ -322,10 +290,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += getParamsPrintDesc(a, "iv向量", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
-
+                log(funcName, params)
 
                 return result;
             }
@@ -339,9 +304,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += "模式填充:" + a + "\n"
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -349,15 +312,13 @@ export namespace AndEncrypt {
             cipher.init.overload('int', 'java.security.Key').implementation = function (a: any, b: any) {
 
                 var result = this.init(a, b);
-             
+
                 let funcName = "javax.crypto.Cipher.init(int operation_mode, Key security_key) "
                 let params = ''
                 params += getModeDesc(a)
                 params += getKeyDesc(b)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -370,10 +331,7 @@ export namespace AndEncrypt {
                 let funcName = "javax.crypto.Cipher.init(int operation_mode, Certificate certificate) "
                 let params = ''
                 params += getModeDesc(a)
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
-
+                log(funcName, params)
                 return result;
             }
 
@@ -387,9 +345,7 @@ export namespace AndEncrypt {
                 params += getModeDesc(a)
                 params += getKeyDesc(b)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -403,9 +359,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += getModeDesc(a)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -420,12 +374,13 @@ export namespace AndEncrypt {
                 params += getModeDesc(a)
                 params += getKeyDesc(b)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params);
 
                 return result;
             }
+
+
+
 
 
             cipher.init.overload('int', 'java.security.Key', 'java.security.AlgorithmParameters').implementation = function (a: any, b: any, c: any) {
@@ -437,9 +392,7 @@ export namespace AndEncrypt {
                 params += getModeDesc(a)
                 params += getKeyDesc(b)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
                 return result;
             }
 
@@ -447,16 +400,14 @@ export namespace AndEncrypt {
             cipher.init.overload('int', 'java.security.Key', 'java.security.AlgorithmParameters', 'java.security.SecureRandom').implementation = function (a: any, b: any, c: any, d: any) {
 
                 var result = this.init(a, b, c, d);
-      
+
 
                 let funcName = "javax.crypto.Cipher.init(int operation_mode, Key security_key, AlgorithmParameters, SecureRandom) "
                 let params = ''
                 params += getModeDesc(a)
                 params += getKeyDesc(b)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -465,16 +416,14 @@ export namespace AndEncrypt {
             cipher.init.overload('int', 'java.security.Key', 'java.security.spec.AlgorithmParameterSpec', 'java.security.SecureRandom').implementation = function (a: any, b: any, c: any, d: any) {
 
                 var result = this.init(a, b, c, d);
-  
+
 
                 let funcName = "javax.crypto.Cipher.init(int operation_mode, Key security_key, AlgorithmParameterSpec, SecureRandom) "
                 let params = ''
                 params += getModeDesc(a)
                 params += getKeyDesc(b)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -487,9 +436,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += getParamsPrintDesc(a, "input", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -505,9 +452,7 @@ export namespace AndEncrypt {
                 params += "offset = " + b + "\n"
                 params += "len = " + c + "\n"
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -520,9 +465,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += getParamsPrintDesc(result, "doFinal结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -536,9 +479,7 @@ export namespace AndEncrypt {
                 params += getParamsPrintDesc(a, "input", PRINT_MODE_STRING | PRINT_MODE_HEX)
                 params += getParamsPrintDesc(result, "doFinal结果", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -555,9 +496,7 @@ export namespace AndEncrypt {
                 let params = ''
                 params += getParamsPrintDesc(a, "RSA密钥", PRINT_MODE_STRING | PRINT_MODE_HEX | PRINT_MODE_BASE64)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -575,9 +514,7 @@ export namespace AndEncrypt {
                 params += "RSA密钥 modulus:" + a.toString(16) + "\n"
                 params += "RSA密钥 public_exponent:" + b.toString(16) + "\n"
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -596,9 +533,7 @@ export namespace AndEncrypt {
                 params += getParamsPrintDesc(bytes_public, "公钥", PRINT_MODE_STRING | PRINT_MODE_HEX)
                 params += getParamsPrintDesc(bytes_private, "私钥", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -615,10 +550,7 @@ export namespace AndEncrypt {
                 params += getParamsPrintDesc(bytes_public, "公钥", PRINT_MODE_STRING | PRINT_MODE_HEX)
                 params += getParamsPrintDesc(bytes_private, "私钥", PRINT_MODE_STRING | PRINT_MODE_HEX)
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
-
+                log(funcName, params)
 
                 return result;
             }
@@ -631,21 +563,17 @@ export namespace AndEncrypt {
                 for (const overload of overloads_update) {
                     overload.implementation = function () {
                         let algorithm = this.getAlgorithm()
-                        let result = this.update(...arguments)
+                        this.update(...arguments)
 
                         let funcName = `java.security.Signature ${overload} `
                         let params = ''
                         params += `algorithm = ${algorithm}\n`
                         params += getParamsPrintDesc(arguments[0], "bytes", PRINT_MODE_STRING | PRINT_MODE_HEX)
-                        params += getParamsPrintDesc(result, "result", PRINT_MODE_STRING | PRINT_MODE_HEX)
-                        
-                        new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                            console.log(HookFuncHandler.logTips.funcParams + params)
-                        }).print();
+                        log(funcName, params)
 
                     }
                 }
-    
+
                 let overloads_sign = Signature.sign.overloads
                 for (const overload of overloads_sign) {
                     overload.implementation = function () {
@@ -657,10 +585,8 @@ export namespace AndEncrypt {
                         let params = ''
                         params += `algorithm = ${algorithm}\n`
                         params += getParamsPrintDesc(result, "result_sign", PRINT_MODE_STRING | PRINT_MODE_HEX)
-                        
-                        new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                            console.log(HookFuncHandler.logTips.funcParams + params)
-                        }).print();
+
+                        log(funcName, params)
                     }
                 }
             }

@@ -5,7 +5,7 @@ import { Buffer } from "node:buffer";
  * string, bytes, hex 三者之间互转操作
  * 
  */
-export namespace StringUtils {
+export namespace ZZStringUtils {
 
 
     /******************* bytes 与 字符串 互转  ************************/

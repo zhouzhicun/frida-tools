@@ -1,25 +1,26 @@
+import { Base } from "../../base/zzBase.js";
 
-import { HookFuncHandler } from "../../base/HookFuncHandler.js";
-import { StringUtils } from "../../base/StringUtils.js";
 
 export namespace AndSocket {
 
     /*--------------------------------------  config ---------------------------------------------- */
 
-    export let print_config = HookFuncHandler.FuncPrintType.func_name
-
+    export let print_config = Base.zzHookFuncHandler.FuncPrintType.func_name
 
 
     /*--------------------------------------  private ---------------------------------------------- */
 
+    function log(funcName: any, params: any) {
+        new Base.zzHookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+            console.log(Base.zzHookFuncHandler.logTips.funcParams + params)
+        }).print();
+    }
 
-
-
-    function dumpByteArr(array: any) {
+    function dumpByteArr(tip: any, array: any) {
 
         // var hexstr = StringUtils.bytesToHex(array)
         // console.log(hexstr)
-
+        console.log(`---------------------------- dump ${tip} ---------------------------------`)
         var ptr = Memory.alloc(array.length);
         var temp = ptr;
         for (var i = 0; i < array.length; ++i) {
@@ -52,10 +53,8 @@ export namespace AndSocket {
                 let funcName = "java.net.InetSocketAddress.InetSocketAddress(java.net.InetAddress, int) "
                 let params = ''
                 params += "addr =>", addr.toString(), "port =>", port
-    
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+
+                log(funcName, params)
 
                 return result
             }
@@ -69,30 +68,26 @@ export namespace AndSocket {
 
 
             Java.use('java.net.SocketOutputStream').socketWrite.overload('[B', 'int', 'int').implementation = function (bytearray1: any, int1: any, int2: any) {
-                
+
                 var result = this.socketWrite(bytearray1, int1, int2)
 
                 let funcName = "java.net.SocketOutputStream.socketWrite([B, int, int)"
-                let params = `result = ${result}, bytearray1 = ${StringUtils.bytesToHex(bytearray1)}, int1 = ${int1}, int2 = ${int2}`
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                let params = `result = ${result}, bytearray1 = ${Base.zzStringUtils.bytesToHex(bytearray1)}, int1 = ${int1}, int2 = ${int2}`
+                log(funcName, params)
+                //dumpByteArr("bytearray1", bytearray1)
 
                 return result
             }
 
             Java.use('java.net.SocketInputStream').read.overload('[B', 'int', 'int').implementation = function (bytearray1: any, int1: any, int2: any) {
-                
+
                 var result = this.read(bytearray1, int1, int2)
 
                 let funcName = "java.net.SocketInputStream.socketRead0([B, int, int)"
-                let params = `result = ${result}, bytearray1 = ${StringUtils.bytesToHex(bytearray1)}, int1 = ${int1}, int2 = ${int2}`
+                let params = `result = ${result}, bytearray1 = ${Base.zzStringUtils.bytesToHex(bytearray1)}, int1 = ${int1}, int2 = ${int2}`
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                    dumpByteArr(bytearray1)
-                }).print();
-
+                log(funcName, params)
+                //dumpByteArr("bytearray1", bytearray1)
 
                 return result
             }
@@ -106,33 +101,27 @@ export namespace AndSocket {
 
 
             Java.use('com.android.org.conscrypt.ConscryptFileDescriptorSocket$SSLOutputStream').write.overload('[B', 'int', 'int').implementation = function (bytearray1: any, int1: any, int2: any) {
-                
+
                 var result = this.write(bytearray1, int1, int2)
 
                 let funcName = "ConscryptFileDescriptorSocket$SSLOutputStream.write([B, int, int)"
-                let params = `result = ${result}, bytearray1 = ${StringUtils.bytesToHex(bytearray1)}, int1 = ${int1}, int2 = ${int2}`
-
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                    dumpByteArr(bytearray1)
-                }).print();
+                let params = `result = ${result}, bytearray1 = ${Base.zzStringUtils.bytesToHex(bytearray1)}, int1 = ${int1}, int2 = ${int2}`
+                log(funcName, params)
+                //dumpByteArr("bytearray1", bytearray1)
 
                 return result
             }
 
 
             Java.use('com.android.org.conscrypt.ConscryptFileDescriptorSocket$SSLInputStream').read.overload('[B', 'int', 'int').implementation = function (bytearray1: any, int1: any, int2: any) {
-                
+
                 var result = this.read(bytearray1, int1, int2)
 
                 let funcName = "ConscryptFileDescriptorSocket$SSLInputStream.read([B, int, int)"
-                let params = `result = ${result}, bytearray1 = ${StringUtils.bytesToHex(bytearray1)}, int1 = ${int1}, int2 = ${int2}`
+                let params = `result = ${result}, bytearray1 = ${Base.zzStringUtils.bytesToHex(bytearray1)}, int1 = ${int1}, int2 = ${int2}`
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                    dumpByteArr(bytearray1)
-                }).print();
-
+                log(funcName, params)
+                //dumpByteArr("bytearray1", bytearray1)
 
                 return result
             }

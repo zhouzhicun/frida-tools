@@ -1,22 +1,25 @@
 
-import { Utils } from "../../base/Utils.js";
+import { Base } from "../base/zzBase.js";
 
 export namespace AntiNativeDebug {
 
+
+    export let print_config = Base.zzHookFuncHandler.FuncPrintType.func_callstacks
+
+
+    /************************** private ************************************ */
+
     const antiDebugLogTip = "anti_native_debug ==>"
 
-    //打印函数调用栈
-    function print_callstacks(funcName: string, context: any) {
-        console.log(antiDebugLogTip + funcName);
-        //print_LR(context);
-        Utils.print_native_callstacks(context);
+    function log(context: any, funcName: any, params: any) {
+        console.log(antiDebugLogTip)
+        new Base.zzHookFuncHandler.NativeFuncHandler(print_config, context, funcName, function () {
+            console.log(Base.zzHookFuncHandler.logTips.funcParams + params)
+        }).print();
     }
 
-    function print_LR(context: any) {
-        let lr = Utils.getLR(context)
-        console.log("lr = " + lr.toString(16))
-    }
 
+    /************************** public ************************************ */
 
     export function anti_debug() {
 
@@ -25,7 +28,6 @@ export namespace AntiNativeDebug {
         anti_ptrace();
         anti_syscall();
         anti_fgets();
-
         anti_app_exit();
     }
 
@@ -39,13 +41,13 @@ export namespace AntiNativeDebug {
 
     export function anti_dlsym() {
 
-        let funcPtr = Utils.getFuncPtr("dlsym");
+        let funcPtr = Base.zzNativeFunc.getFuncPtr("dlsym");
         let origin_func = new NativeFunction(funcPtr, 'pointer', ['pointer', 'pointer']);
         Interceptor.replace(funcPtr, new NativeCallback(function (handle: any, name: any) {
             let funcName = name.readCString()
             console.log(antiDebugLogTip + `dlsym(${funcName}) called\n`);
-            if(funcName == "pthread_create") {
-                print_callstacks('dlsym', this.context);
+            if (funcName == "pthread_create") {
+                log(this.context, 'dlsym', 'funcName: pthread_create')
             }
             return origin_func(handle, name);
 
@@ -54,61 +56,42 @@ export namespace AntiNativeDebug {
     }
 
 
-    export function hook_dlsym(targetFuncName: string, callBack: any) {
-
-        let funcPtr = Utils.getFuncPtr("dlsym");
-        let origin_func = new NativeFunction(funcPtr, 'pointer', ['pointer', 'pointer']);
-        Interceptor.replace(funcPtr, new NativeCallback(function (handle: any, name: any) {
-            let curFuncName = name.readCString()
-            console.log(antiDebugLogTip + `dlsym(${curFuncName}) called\n`);
-            let result = origin_func(handle, name);
-            console.log("curFuncName = " + curFuncName + " targetFuncName = " + targetFuncName);
-            if(curFuncName == targetFuncName) {
-                console.log("---------------------------------11111111111---------------------------------")
-                console.log("func_addr = 0x" + result.toString(16))
-                callBack(result);
-            }
-            return result;
-
-        }, 'pointer', ['pointer', 'pointer']));
-
-    }
 
 
     export function anti_ptrace() {
 
         //long ptrace(enum __ptrace_request op, pid_t pid, void *addr, void *data);
-        let funcPtr = Utils.getFuncPtr("ptrace");
+        let funcPtr = Base.zzNativeFunc.getFuncPtr("ptrace");
         let origin_func = new NativeFunction(funcPtr, 'long', ['int', "int", 'pointer', 'pointer']);
         Interceptor.replace(funcPtr, new NativeCallback(function (request: any, pid: any, addr: any, data: any) {
 
             //PT_DENY_ATTACH 31
             if (request == 31) {
-                print_callstacks('ptrace', this.context);
+                log(this.context, 'ptrace', 'request: 31')
                 return 0;
-            } 
+            }
             return origin_func(request, pid, addr, data);
 
         }, 'long', ['int', "int", 'pointer', 'pointer']));
 
     }
 
-    
+
     export function anti_syscall() {
 
         //long syscall(long number, ...);
-        let funcPtr = Utils.getFuncPtr("syscall");
+        let funcPtr = Base.zzNativeFunc.getFuncPtr("syscall");
         let origin_func = new NativeFunction(funcPtr, 'long', ['long', 'pointer']);
         Interceptor.replace(funcPtr, new NativeCallback(function (code: any, args: any) {
-            
+
             //ptrace 26
             if (code == 26) {
                 let arg0 = args[0]
-                if(arg0 == 31) {
-                    print_callstacks('syscall(ptrace)', this.context);
+                if (arg0 == 31) {
+                    log(this.context, 'syscall', 'syacallNumber: 31(ptrace)')
                     return 0;
                 }
-            } 
+            }
             return origin_func(code, args);
 
         }, 'long', ['long', 'pointer']));
@@ -117,10 +100,10 @@ export namespace AntiNativeDebug {
 
     export function anti_fork() {
         // pid_t fork(void);
-        let funcPtr = Utils.getFuncPtr("fork");
+        let funcPtr = Base.zzNativeFunc.getFuncPtr("fork");
         let origin_func = new NativeFunction(funcPtr, 'int', []);
-        Utils.replaceFunc('fork', new NativeCallback(function () {
-            print_callstacks('fork', this.context);
+        Base.zzNativeFunc.replaceFunc('fork', new NativeCallback(function () {
+            log(this.context, 'fork', null)
             return origin_func();
         }, 'int', []));
     }
@@ -129,8 +112,8 @@ export namespace AntiNativeDebug {
     export function anti_abort() {
 
         //void abort(void);
-        Utils.replaceFunc('abort', new NativeCallback(function () {
-            print_callstacks('abort', this.context);
+        Base.zzNativeFunc.replaceFunc('abort', new NativeCallback(function () {
+            log(this.context, 'abort', null)
             return 0;
         }, 'void', []));
     }
@@ -138,23 +121,23 @@ export namespace AntiNativeDebug {
     export function anti_exit() {
 
         //void _exit(int status);
-        Utils.replaceFunc('_exit', new NativeCallback(function () {
-            print_callstacks('_exit', this.context);
+        Base.zzNativeFunc.replaceFunc('_exit', new NativeCallback(function () {
+            log(this.context, '_exit', null)
         }, 'void', ['int']));
 
         // //void _Exit(int status);
-        // Utils.replaceFunc('_Exit', new NativeCallback(function () {
+        // Base.zzNativeFunc.replaceFunc('_Exit', new NativeCallback(function () {
         //     print_callstacks('_Exit', this.context);
         // }, 'void', ['int']));
 
         //void exit(int status);
-        Utils.replaceFunc('exit', new NativeCallback(function () {
-            print_callstacks('exit', this.context);
+        Base.zzNativeFunc.replaceFunc('exit', new NativeCallback(function () {
+            log(this.context, 'exit', null)
         }, 'void', ['int']));
 
         //void exit_group(int status);
-        Utils.replaceFunc('exit_group', new NativeCallback(function () {
-            print_callstacks('exit_group', this.context);
+        Base.zzNativeFunc.replaceFunc('exit_group', new NativeCallback(function () {
+            log(this.context, 'exit_group', null)
         }, 'void', ['int']));
 
     }
@@ -162,8 +145,8 @@ export namespace AntiNativeDebug {
     export function anti_kill() {
 
         //int kill(pid_t pid, int sig);
-        Utils.replaceFunc('kill', new NativeCallback(function () {
-            print_callstacks('kill', this.context);
+        Base.zzNativeFunc.replaceFunc('kill', new NativeCallback(function () {
+            log(this.context, 'kill', null)
             return 0;
         }, 'int', ['int', 'int']));
     }
@@ -171,8 +154,8 @@ export namespace AntiNativeDebug {
     export function anti_raise() {
 
         // int raise(int sig);
-        Utils.replaceFunc('raise', new NativeCallback(function () {
-            print_callstacks('raise', this.context);
+        Base.zzNativeFunc.replaceFunc('raise', new NativeCallback(function () {
+            log(this.context, 'raise', null)
             return 0;
         }, 'int', ['int']));
     }
@@ -191,7 +174,7 @@ export namespace AntiNativeDebug {
     export function anti_fgets() {
 
         //char *fgets(char *restrict s, int n, FILE *restrict stream);
-        var funcPtr = Utils.getFuncPtr("fgets");
+        var funcPtr = Base.zzNativeFunc.getFuncPtr("fgets");
         var origin_fgets = new NativeFunction(funcPtr, 'pointer', ['pointer', 'int', 'pointer']);
         Interceptor.replace(funcPtr, new NativeCallback(function (buffer: any, size: any, fp: any) {
 
@@ -230,14 +213,13 @@ export namespace AntiNativeDebug {
 
                 // frida
                 else if (bufstr.indexOf('frida') > -1) {
-                    print_callstacks('fgets', this.context);
                     buffer.writeUtf8String("zz");
                     logs = "fgets(frida)";
                 }
 
                 if (logs.length > 0) {
                     console.log(logs);
-                    print_callstacks('fgets', this.context);
+                    log(this.context, 'fgets', logs)
                 }
             }
             return retval;
@@ -245,8 +227,29 @@ export namespace AntiNativeDebug {
 
 
         }, 'pointer', ['pointer', 'int', 'pointer']));
+    }
+
+
+    export function watch_dlsym(targetFuncName: string, callBack: any) {
+
+        let funcPtr = Base.zzNativeFunc.getFuncPtr("dlsym");
+        let origin_func = new NativeFunction(funcPtr, 'pointer', ['pointer', 'pointer']);
+        Interceptor.replace(funcPtr, new NativeCallback(function (handle: any, name: any) {
+            let curFuncName = name.readCString()
+            let result = origin_func(handle, name);
+
+            console.log(antiDebugLogTip + `dlsym(${curFuncName}) called\n`);
+            if (curFuncName == targetFuncName) {
+                console.log("--------------------------------- watch_dlsym ---------------------------------")
+                console.log("func_addr = 0x" + result.toString(16))
+                callBack(result);
+            }
+            return result;
+
+        }, 'pointer', ['pointer', 'pointer']));
 
     }
+
 }
 
 

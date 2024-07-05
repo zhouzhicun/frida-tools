@@ -1,6 +1,11 @@
-/***
- * 由于ts文件格式下 Java.classFactory.loader 无法赋值，因此改为js文件。
- */
+
+
+//==========================================================
+//
+// 由于ts文件格式下 Java.classFactory.loader无法赋值，因此改为js文件。
+//
+//==========================================================
+
 
 export function load_dex(path) {
 
@@ -12,12 +17,12 @@ export function load_dex(path) {
 }
 
 /**
- * 已完成动态加载的情况下， hook指定Java类; 具体hook操作在callback函数中实现。
+ * hook动态加载的Java类（确保已加载）; 具体hook操作在callback函数中实现。
  * 
  * @param {*} clsName 类名
  * @param {*} callback 回调函数
  */
-export function hook_dynamic_dex(clsName, callback) {
+export function hook_java_dynamic_loaded(clsName, callback) {
 
     Java.perform(function () {
 
@@ -51,12 +56,12 @@ export function hook_dynamic_dex(clsName, callback) {
 
 
 /**
- * 解决dex不知何时加载的情况下，hook指定Java类; 具体hook操作在callback函数中实现。
+ * hook InMemoryDexClassLoader的init时机; 具体hook操作在callback函数中实现。
  * 
  * @param {*} clsName 类名
  * @param {*} callback 回调函数
  */
-export function hook_memory_dex_class_loader(callback) {
+export function hook_InMemoryDexClassLoader_init(callback) {
 
     const InMemoryDexClassLoader = Java.use('dalvik.system.InMemoryDexClassLoader');
     InMemoryDexClassLoader.$init.overload('java.nio.ByteBuffer', 'java.lang.ClassLoader').implementation = function (buff, loader) {

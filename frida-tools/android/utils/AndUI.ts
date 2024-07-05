@@ -1,14 +1,10 @@
+import { Base } from "../../base/zzBase.js";
 
-import { HookFuncHandler } from "../../base/HookFuncHandler.js"
+
 
 export namespace AndUI {
 
 
-    /*--------------------------------------  config ---------------------------------------------- */
-
-    export let print_config = HookFuncHandler.FuncPrintType.func_name
-
-        
     /*--------------------------------------  public ---------------------------------------------- */
 
     export function hook_ui() {
@@ -24,27 +20,20 @@ export namespace AndUI {
 
     function get_class_name(obj: any) {
         return obj.getClass().getName()
-     }
+    }
+
+
 
     export function hook_activity() {
 
         Java.perform(function () {
-            
+
             var Activity = Java.use("android.app.Activity");
 
             Activity.onCreate.overload('android.os.Bundle').implementation = function (bundle: any) {
-                
-                let curObj = this
-                this.onCreate(bundle);
 
-                let funcName = get_class_name(curObj) + ".onCreate()"
-                let params = ''
-    
-                //以下代码固定，只需修改上面的funcName、params
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function(){
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
-        
+                console.log("Activity.onCreate() called ==>" + get_class_name(this));
+                this.onCreate(bundle);
             };
 
             Activity.onStart.implementation = function () {

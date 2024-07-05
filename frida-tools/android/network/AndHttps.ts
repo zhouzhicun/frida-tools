@@ -1,12 +1,25 @@
 
-import { HookFuncHandler } from "../../base/HookFuncHandler.js";
+import { Base } from "../../base/zzBase.js";
+
 
 export namespace AndHttps {
 
 
     /*--------------------------------------  config ---------------------------------------------- */
 
-    export let print_config = HookFuncHandler.FuncPrintType.func_name
+    export let print_config = Base.zzHookFuncHandler.FuncPrintType.func_name
+
+
+
+
+    /*--------------------------------------  private ---------------------------------------------- */
+
+    function log(funcName: any, params: any) {
+        new Base.zzHookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
+            console.log(Base.zzHookFuncHandler.logTips.funcParams + params)
+        }).print();
+    }
+
 
 
     /*--------------------------------------  public ---------------------------------------------- */
@@ -37,10 +50,7 @@ export namespace AndHttps {
                 let params = ''
                 params += 'url = ' + urlstr
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
-
+                log(funcName, params)
                 return result
             }
             URL.openConnection.overload().implementation = function () {
@@ -48,9 +58,7 @@ export namespace AndHttps {
 
                 let funcName = "java.net.URL.openConnection()"
                 let params = ''
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result
             }
@@ -64,9 +72,7 @@ export namespace AndHttps {
                 let params = ''
                 params += `key = ${key}, value = ${value}`
 
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result
             }
@@ -85,10 +91,7 @@ export namespace AndHttps {
                 let funcName = "retrofit2.Retrofit$Builder.baseUrl(String url)"
                 let params = ''
                 params += `url = ${url}`
-
-                new HookFuncHandler.JavaFuncHandler(print_config, funcName, function () {
-                    console.log(HookFuncHandler.logTips.funcParams + params)
-                }).print();
+                log(funcName, params)
 
                 return result;
             }
@@ -98,6 +101,7 @@ export namespace AndHttps {
                 let funcName = "retrofit2.Retrofit$Builder.baseUrl(HttpUrl url)"
                 let params = ''
                 params += `url = ${url}`
+                log(funcName, params)
                 return result;
             }
         })

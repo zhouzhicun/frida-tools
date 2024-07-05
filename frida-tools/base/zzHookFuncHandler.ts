@@ -1,6 +1,6 @@
-import { Utils } from "./Utils.js";
+import { Base } from "./zzBase.js";
 
-export namespace HookFuncHandler {
+export namespace ZZHookFuncHandler {
 
     export enum FuncPrintType {
         none,             //不打印
@@ -31,11 +31,11 @@ export namespace HookFuncHandler {
            
             this.printType = printType;
             this.printFuncName = function(){
-                console.log(HookFuncHandler.logTips.funcName + funcname)
+                console.log(logTips.funcName + funcname)
             }
             this.printFuncParams = funcparams
             this.printCallstacks = function(){
-                console.log(HookFuncHandler.logTips.funcCallstacks)
+                console.log(logTips.funcCallstacks)
                 callstacks()
             }
         }
@@ -59,15 +59,15 @@ export namespace HookFuncHandler {
     //Java函数hook处理类
     export class JavaFuncHandler extends AbstractFuncHandler {
         constructor(printType: number, funcname: string, funcparams: VoidCallback) {
-            super(printType, funcname, funcparams, Utils.print_java_callstacks)
+            super(printType, funcname, funcparams, Base.zzCallStack.printJavaCallstacks)
         }
     }
 
     //native函数hook处理类
     export class NativeFuncHandler extends AbstractFuncHandler {
-        constructor(printType: number, funcname: string, context: any, funcparams: VoidCallback) {
+        constructor(printType: number, context: any, funcname: string, funcparams: VoidCallback) {
             let print_callstack = function(){
-                Utils.print_native_callstacks(context)
+                Base.zzCallStack.printNativeCallstacks(context)
             }
             super(printType, funcname, funcparams, print_callstack)
         }

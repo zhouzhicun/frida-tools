@@ -1,4 +1,4 @@
-import { Utils } from "../../base/Utils.js";
+import { Base } from "../base/zzBase.js";
 
 export namespace AntiJavaDebug {
 
@@ -17,7 +17,7 @@ export namespace AntiJavaDebug {
         Java.perform(function () {
             var Build = Java.use("android.os.Build");
             Build.isDebuggable.implementation = function () {
-                console.log(antiDebugLogTip + "Build.isDebuggable() called ==>" + Utils.get_class_name(this));
+                console.log(antiDebugLogTip + "Build.isDebuggable() called");
                 return false;
             };
         });
@@ -28,13 +28,13 @@ export namespace AntiJavaDebug {
         Java.perform(function () {
             var Debug = Java.use("android.os.Debug");
             Debug.isDebuggerConnected.implementation = function () {
-                console.log(antiDebugLogTip + "Debug.isDebuggerConnected() called ==>" + Utils.get_class_name(this));
+                console.log(antiDebugLogTip + "Debug.isDebuggerConnected() called");
                 return false;
             };
         });
     }
 
-    function anti_system_getProperty() {    
+    function anti_system_getProperty() {
         Java.perform(function () {
             var System = Java.use('java.lang.System');
             System.getProperty.overload('java.lang.String').implementation = function (name: string) {
@@ -49,16 +49,10 @@ export namespace AntiJavaDebug {
         });
     }
 
-    
+
 
     function anti_strace() {
-        // Java.perform(function () {
-        //     var Runtime = Java.use("java.lang.Runtime");
-        //     Runtime.exec.overload('java.lang.String').implementation = function (cmd: any) {
-        //         console.log(antiDebugLogTip +  "Runtime.exec() called ==>" + Utils.get_class_name(this));
-        //         return this.exec(cmd);
-        //     };
-        // });
+
     }
 
     function anti_emulator() {
