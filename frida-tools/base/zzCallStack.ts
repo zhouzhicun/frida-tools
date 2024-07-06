@@ -22,6 +22,50 @@ export namespace ZZCallStack {
     }
 
 
+    export function printNativeCallstacksV2(context: any) {
+        let addr = stacktrace(context as Arm64CpuContext, 30)
+        console.log(' called from:\n' + addr.map(DebugSymbol.fromAddress).join('\n') + '\n');
+    }
+
+    function stacktrace(context: Arm64CpuContext, number: number) {
+
+        var sp: NativePointer = context.sp;
+        var fp: NativePointer = context.fp;
+        var pc: NativePointer = context.pc;
+
+        console.log("sp = " + sp.toString() + ", fp = " + fp.toString() + ", pc = " + pc.toString() + "\n")
+
+        let n = 0
+        let stack_arr: NativePointer[] = []
+        stack_arr[n++] = pc;
+
+        let cur_fp = fp
+       
+        while (n < number) {
+            //判断栈的有效性
+            if (parseInt(cur_fp.toString()) < parseInt(sp.toString())) {
+                break
+            }
+            //读取上一个栈帧
+            let pre_fp = cur_fp.readPointer()
+            let lr = cur_fp.add(8).readPointer()
+    
+            console.log("pre_fp = " + pre_fp.toString() + ", lr = " + lr.toString() +  "\n")
+            if(lr.toInt32() == 0) {
+                break
+            }
+
+            cur_fp = pre_fp
+            stack_arr[n++] = lr
+       
+        }
+
+        console.log("addr = ", stack_arr)
+        return stack_arr;
+    }
+
+
+
     //================================= 当前函数栈信息 =========================================
 
     /**

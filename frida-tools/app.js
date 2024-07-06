@@ -3,12 +3,12 @@
 90 /agent/main.js
 741 /agent/app/anti_msaoaidsec.js.map
 754 /agent/app/anti_msaoaidsec.js
-553 /agent/app/app_anti_msaoaidsec.js.map
-863 /agent/app/app_anti_msaoaidsec.js
 974 /agent/app/duodian_android_v6_2_1.js.map
 1029 /agent/app/duodian_android_v6_2_1.js
-270 /agent/app/jd_android_v13.1.2.js.map
-127 /agent/app/jd_android_v13.1.2.js
+2408 /agent/app/gonghang_android_v13.1.2.js.map
+4996 /agent/app/gonghang_android_v13.1.2.js
+304 /agent/app/jd_android_v13.1.2.js.map
+287 /agent/app/jd_android_v13.1.2.js
 898 /agent/app/jianshen_android_v3_7_5.js.map
 2206 /agent/app/jianshen_android_v3_7_5.js
 16423 /android/AndEncrypt.js.map
@@ -19,16 +19,6 @@
 8614 /android/AntiNativeDebug.js
 569 /android/antiFrida/msaoaidsec/AntiMSA.js.map
 865 /android/antiFrida/msaoaidsec/AntiMSA.js
-583 /android/antiFrida/msaoaidsec/AntiMsaoaidsec.js.map
-873 /android/antiFrida/msaoaidsec/AntiMsaoaidsec.js
-2403 /android/antiFrida/msaoaidsec/frida_nop_thread_func.js.map
-4035 /android/antiFrida/msaoaidsec/frida_nop_thread_func.js
-2527 /android/antiFrida/msaoaidsec/frida_nop_thread_funcV2.js.map
-4280 /android/antiFrida/msaoaidsec/frida_nop_thread_funcV2.js
-1778 /android/antiFrida/msaoaidsec/frida_replace_pthread_create.js.map
-2599 /android/antiFrida/msaoaidsec/frida_replace_pthread_create.js
-722 /android/antiFrida/msaoaidsec/frida_unopen_msaoaidsec.js.map
-882 /android/antiFrida/msaoaidsec/frida_unopen_msaoaidsec.js
 2399 /android/antiFrida/msaoaidsec/msa_nop_thread_func.js.map
 4035 /android/antiFrida/msaoaidsec/msa_nop_thread_func.js
 2523 /android/antiFrida/msaoaidsec/msa_nop_thread_funcV2.js.map
@@ -49,8 +39,8 @@
 6651 /android/utils/AndUI.js
 732 /base/zzBase.js.map
 779 /base/zzBase.js
-2019 /base/zzCallStack.js.map
-2743 /base/zzCallStack.js
+3314 /base/zzCallStack.js.map
+3964 /base/zzCallStack.js
 1788 /base/zzHookFuncHandler.js.map
 2490 /base/zzHookFuncHandler.js
 4950 /base/zzNativeFunc.js.map
@@ -108,37 +98,6 @@ export function main() {
     // }, 3000)
 }
 ✄
-{"version":3,"file":"app_anti_msaoaidsec.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["agent/app/app_anti_msaoaidsec.ts"],"names":[],"mappings":"AAGA,OAAO,EAAE,aAAa,EAAE,MAAM,gDAAgD,CAAC;AAG/E,MAAM,UAAU,IAAI;IAGhB,aAAa,EAAE,CAAA;IAGf,WAAW;IAGX,uBAAuB;IACvB,aAAa;IACb,0CAA0C;IAC1C,uCAAuC;IACvC,IAAI;IAEJ,uBAAuB;IACvB,aAAa;IACb,4CAA4C;IAC5C,yCAAyC;IACzC,IAAI;IAEJ,uBAAuB;IACvB,aAAa;IACb,iDAAiD;IACjD,8CAA8C;IAC9C,IAAI;IAEJ,uBAAuB;IACvB,aAAa;IACb,4CAA4C;IAC5C,yCAAyC;IACzC,IAAI;IAGJ,0BAA0B;IAC1B,sBAAsB;IACtB,WAAW;AAEf,CAAC"}
-✄
-import { anti_jd_frida } from "../../android/antiFrida/other/anti_jd_frida.js";
-export function main() {
-    anti_jd_frida();
-    //method1()
-    // function method1() {
-    //     //方式1：
-    //     console.log("方式1: nop_thread_func")
-    //     AntiMsaoaidsec.nop_thread_func()
-    // }
-    // function method2() {
-    //     //方式1：
-    //     console.log("方式2: nop_thread_funcV2")
-    //     AntiMsaoaidsec.nop_thread_funcV2()
-    // }
-    // function method3() {
-    //     //方式1：
-    //     console.log("方式3: replace_pthread_create")
-    //     AntiMsaoaidsec.replace_pthread_create()
-    // }
-    // function method4() {
-    //     //方式1：
-    //     console.log("方式4: unopen_msaoaidsec")
-    //     AntiMsaoaidsec.unopen_msaoaidsec()
-    // }
-    // setTimeout(function() {
-    //     AndUI.hook_ui()
-    // }, 3000)
-}
-✄
 {"version":3,"file":"duodian_android_v6_2_1.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["agent/app/duodian_android_v6_2_1.ts"],"names":[],"mappings":"AAIA,OAAO;AAOP,OAAO,EAAE,KAAK,EAAE,MAAM,8BAA8B,CAAC;AACrD,OAAO,EAAE,KAAK,EAAE,MAAM,8BAA8B,CAAC;AACrD,OAAO,EAAE,IAAI,EAAE,MAAM,sBAAsB,CAAC;AAG5C,+BAA+B;AAC/B,MAAM,UAAU,IAAI;IAEhB,iBAAiB;IACjB,6BAA6B;IAE7B,IAAI,YAAY,GAAG,gCAAgC,CAAC;IACpD,IAAI,SAAS,GAAG,CAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,EAAC,OAAO,CAAC,CAAA;IAEzJ,KAAK,CAAC,4BAA4B,CAAC,YAAY,EAAE;QAC7C,KAAK,CAAC,YAAY,CAAC,YAAY,CAAC,CAAA;QAEhC,UAAU;QACV,oDAAoD;QAEpD,qBAAqB;QACrB,IAAI,IAAI,GAAG,MAAM,CAAC,eAAe,CAAC,YAAY,CAAC,CAAA;QAC/C,IAAI,CAAC,OAAO,CAAC,wBAAwB,CAAC,IAAI,CAAC,GAAG,CAAC,OAAO,CAAC,EAAE,UAAU,CAAC,CAAA;IAExE,CAAC,CAAC,CAAC;IAKH,KAAK,CAAC,OAAO,EAAE,CAAA;IACf,wBAAwB;IACxB,0BAA0B;IAC1B,4BAA4B;AAEhC,CAAC"}
 ✄
 //App模板
@@ -165,11 +124,124 @@ export function main() {
     // AndEncrypt.hook_encrypt()
 }
 ✄
-{"version":3,"file":"jd_android_v13.1.2.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["agent/app/jd_android_v13.1.2.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,aAAa,EAAE,MAAM,gDAAgD,CAAC;AAE/E,MAAM,UAAU,IAAI;IAEhB,aAAa,EAAE,CAAA;AAEnB,CAAC"}
+{"version":3,"file":"gonghang_android_v13.1.2.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["agent/app/gonghang_android_v13.1.2.ts"],"names":[],"mappings":"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"}
 ✄
-import { anti_jd_frida } from "../../android/antiFrida/other/anti_jd_frida.js";
+import { AndSo } from "../../android/utils/AndSo.js";
+import { Base } from "../../base/zzBase.js";
+/**
+ * 工商银行
+ */
 export function main() {
-    anti_jd_frida();
+    //AndSo.location_anti_frida()
+    //hook Runtime.getRuntime().exec("su") 函数
+    // // 使用Frida hook Runtime.getRuntime().exec("su") 函数
+    // Java.perform(function () {
+    //     var runtime = Java.use('java.lang.Runtime');
+    //     runtime.exec.overload('java.lang.String').implementation = function (command: string) {
+    //         console.log(`------------------Runtime.exec(${command})-------------------------`);
+    //         if (command.includes("su")) {
+    //             console.log("Detected 'su' command execution");
+    //             // 在这里执行你的操作
+    //             return Java.use('java.lang.Process').$new()
+    //         }
+    //         return this.exec(command);
+    //     };
+    // });
+    let targetSoName = 'libtongdun.so';
+    let bundleName = "com.icbc";
+    AndSo.hook_linker_call_constructor(targetSoName, function () {
+        anti_exit();
+        anti_kill();
+        // Base.zzPatch.nopFunc64_by_offset(targetSoName, 0xD92A8)
+        // let base = Module.findBaseAddress(targetSoName)
+        // Interceptor.attach(base.add(0x106C4), {
+        //     onEnter: function(){
+        //         Base.zzPatch.patchCode64_with_codeHex(base.add(0x106C8), 'fc6fc6a8c0035fd6') 
+        //     }
+        // })
+        // Interceptor.attach(base.add(0x2CDA0), {
+        //     onEnter: function(){
+        //         Base.zzPatch.patchCode64_with_codeHex(base.add(0x2CDA4), 'ff430191c0035fd6') 
+        //     }
+        // })
+        // Interceptor.attach(base.add(0x343C8), {
+        //     onEnter: function(){
+        //         Base.zzPatch.patchCode64_with_codeHex(base.add(0x343CC), 'fc6fc6a8c0035fd6') 
+        //     }
+        // })
+        // Interceptor.attach(base.add(0x38E98), {
+        //     onEnter: function(){
+        //         Base.zzPatch.patchCode64_with_codeHex(base.add(0x38E9C), 'fc6fc6a8c0035fd6') 
+        //     }
+        // })
+        // Interceptor.attach(base.add(0x39434), {
+        //     onEnter: function(){
+        //         Base.zzPatch.patchCode64_with_codeHex(base.add(0x39438), 'fc6fc6a8c0035fd6') 
+        //     }
+        // })
+    });
+    var dumpresult = false;
+    function anti_exit() {
+        //void _exit(int status);
+        // Base.zzNativeFunc.replaceFunc('_exit', new NativeCallback(function () {
+        //     console.log("------------------ _exit dump ---------------------------------")
+        //     // if(dumpresult == false) {
+        //     //     AndSo.dump_so(targetSoName, bundleName)
+        //     //     AndSo.dump_so_export_symbols("libc.so", bundleName)
+        //     //     dumpresult = true
+        //     // }
+        //     Base.zzCallStack.printNativeCallstacksV2(this.context)
+        // }, 'void', ['int']));
+        // //void _Exit(int status);
+        // Base.zzNativeFunc.replaceFunc('_Exit', new NativeCallback(function () {
+        //     print_callstacks('_Exit', this.context);
+        // }, 'void', ['int']));
+        //void exit(int status);
+        Base.zzNativeFunc.replaceFunc('exit', new NativeCallback(function () {
+            console.log("------------------ exit dump ---------------------------------");
+            //AndSo.dump_so(targetSoName, bundleName)
+            Base.zzCallStack.printNativeCallstacksV2(this.context);
+        }, 'void', ['int']));
+        // //void exit_group(int status);
+        // Base.zzNativeFunc.replaceFunc('exit_group', new NativeCallback(function () {
+        //     console.log("------------------ exit_group dump ---------------------------------")
+        //     AndSo.dump_so(targetSoName, bundleName)
+        // }, 'void', ['int']));
+    }
+    function anti_kill() {
+        //int kill(pid_t pid, int sig);
+        Base.zzNativeFunc.replaceFunc('kill', new NativeCallback(function () {
+            console.log("------------------ kill dump ---------------------------------");
+            //AndSo.dump_so(targetSoName, bundleName)
+            Base.zzCallStack.printNativeCallstacksV2(this.context);
+            return 0;
+        }, 'int', ['int', 'int']));
+    }
+    //通过hook strstr函数获取frida检测的堆栈，并进一步分析，从而获得检测函数地址
+    function hook_strstr() {
+        var pt_strstr = Module.findExportByName("libc.so", 'strstr');
+        Interceptor.attach(pt_strstr, {
+            onEnter: function (args) {
+                var str1 = args[0].readCString();
+                var str2 = args[1].readCString();
+                console.log("strstr-->", str1, str2);
+                console.log('strstr called from:\\n' + Thread.backtrace(this.context, Backtracer.ACCURATE).map(DebugSymbol.fromAddress).join('\\n') + '\\n');
+                // console.log('strstr called from:\\n' + Thread.backtrace(this.context, Backtracer.FUZZY).map(DebugSymbol.fromAddress).join('\\n') + '\\n');
+            }
+        });
+    }
+}
+✄
+{"version":3,"file":"jd_android_v13.1.2.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["agent/app/jd_android_v13.1.2.ts"],"names":[],"mappings":"AAKA,OAAO,EAAE,KAAK,EAAE,MAAM,8BAA8B,CAAC;AAIrD;;;GAGG;AACH,MAAM,UAAU,IAAI;IAEpB,iBAAiB;IAEjB,KAAK,CAAC,OAAO,EAAE,CAAA;AAEf,CAAC"}
+✄
+import { AndUI } from "../../android/utils/AndUI.js";
+/**
+ * jd, 使用Florida可直接过frida检测，仓库地址：https://github.com/Ylarod/Florida
+ * 当前使用版本：florida-server-16.1.11-android-arm64
+ */
+export function main() {
+    //anti_jd_frida()
+    AndUI.hook_ui();
 }
 ✄
 {"version":3,"file":"jianshen_android_v3_7_5.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["agent/app/jianshen_android_v3_7_5.ts"],"names":[],"mappings":"AAAA,OAAO;AAYP,4BAA4B;AAC5B,MAAM,UAAU,IAAI;IAKhB,oBAAoB;IACpB,uCAAuC;IAGvC,sCAAsC;IACtC,iEAAiE;IACjE,qCAAqC;IACrC,oBAAoB;IACpB,gBAAgB;IAChB,MAAM;IAIN,sBAAsB;IACtB,uDAAuD;IACvD,yCAAyC;IACzC,yCAAyC;IAIzC,+CAA+C;IAC/C,+CAA+C;IAC/C,IAAI;IAGJ,WAAW;IACX,kCAAkC;IAClC,0BAA0B;IAE1B,2CAA2C;IAC3C,mFAAmF;IACnF,YAAY;IACZ,yCAAyC;IAEzC,qDAAqD;IACrD,kDAAkD;IAClD,kDAAkD;IAClD,wCAAwC;IACxC,2BAA2B;IAC3B,yCAAyC;IACzC,oBAAoB;IACpB,iBAAiB;IACjB,0CAA0C;IAC1C,gDAAgD;IAChD,mCAAmC;IACnC,iDAAiD;IACjD,qDAAqD;IACrD,wBAAwB;IACxB,oBAAoB;IAEpB,gBAAgB;IAChB,YAAY;IACZ,QAAQ;IACR,yBAAyB;IACzB,IAAI;IAEJ,2CAA2C;IAC3C,sDAAsD;IACtD,mDAAmD;IACnD,qCAAqC;IACrC,qCAAqC;IACrC,yEAAyE;IACzE,6GAA6G;IAC7G,YAAY;IACZ,SAAS;IACT,yBAAyB;IACzB,IAAI;AAGR,CAAC"}
@@ -919,331 +991,6 @@ export var AntiMSA;
     AntiMSA.replace_pthread_create = msa_replace_pthread_create;
     AntiMSA.unopen_msaoaidsec = msa_unopen_msaoaidsec;
 })(AntiMSA || (AntiMSA = {}));
-✄
-{"version":3,"file":"AntiMsaoaidsec.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["android/antiFrida/msaoaidsec/AntiMsaoaidsec.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,mBAAmB,EAAE,MAAM,0BAA0B,CAAC;AAC/D,OAAO,EAAE,qBAAqB,EAAE,MAAM,4BAA4B,CAAC;AACnE,OAAO,EAAE,4BAA4B,EAAE,MAAM,iCAAiC,CAAC;AAC/E,OAAO,EAAE,uBAAuB,EAAE,MAAM,4BAA4B,CAAC;AAGrE;;;;;;;;;;GAUG;AAEH,MAAM,KAAW,OAAO,CAOvB;AAPD,WAAiB,OAAO;IAET,uBAAe,GAAG,mBAAmB,CAAA;IACrC,yBAAiB,GAAG,qBAAqB,CAAA;IACzC,8BAAsB,GAAG,4BAA4B,CAAA;IACrD,yBAAiB,GAAG,uBAAuB,CAAA;AAE1D,CAAC,EAPgB,OAAO,KAAP,OAAO,QAOvB"}
-✄
-import { msa_nop_thread_func } from "./msa_nop_thread_func.js";
-import { msa_nop_thread_funcV2 } from "./msa_nop_thread_funcV2.js";
-import { frida_replace_pthread_create } from "./msa_replace_pthread_create.js";
-import { frida_unopen_msaoaidsec } from "./msa_unopen_msaoaidsec.js";
-/**
- *
-测试样本：(msaoaidsec版本：v8.83)
-xhs, aiqiyi, bilibili, xiecheng;  anjuke是32位的so, 暂不考虑，原理一致。
-
-如何查看msaoaidsec版本：
-IDA打开so库，定位到JNI_Onload函数，找到下面代码：
-_android_log_write(4, "NagaLinker", "v8.83");
-
- *
- */
-export var AntiMSA;
-(function (AntiMSA) {
-    AntiMSA.nop_thread_func = msa_nop_thread_func;
-    AntiMSA.nop_thread_funcV2 = msa_nop_thread_funcV2;
-    AntiMSA.replace_pthread_create = frida_replace_pthread_create;
-    AntiMSA.unopen_msaoaidsec = frida_unopen_msaoaidsec;
-})(AntiMSA || (AntiMSA = {}));
-✄
-{"version":3,"file":"frida_nop_thread_func.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["android/antiFrida/msaoaidsec/frida_nop_thread_func.ts"],"names":[],"mappings":"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"}
-✄
-/**
- * 参考文档：https://bbs.kanxue.com/thread-277034.htm
-
-原理：
-第一步：hook dlopen函数，当加载libmsaoaidsec.so时，调用locate_init()函数，即hook __system_property_get函数。
-第二步：调用__system_property_get函数获取ro.build.version.sdk属性时：
-    1.定位检测线程：调用hook_pthread_create()函数，对pthread_create函数进行hook，并打印线程函数地址。
-    2.bypass: 调用bypass()函数，该函数中nop或者patch掉三个地址，绕过检测。
-
-表现：
-哔哩哔哩  tv.danmaku.bili（通过）
-小红书    com.xingin.xhs （通过）
-爱奇艺    com.qiyi.video  （通过）
-携程旅行  ctrip.android.view （通过）
-
- */
-export function msa_nop_thread_func() {
-    let targetSoName = 'libmsaoaidsec.so';
-    Interceptor.attach(Module.findExportByName(null, "android_dlopen_ext"), {
-        onEnter: function (args) {
-            var pathPtr = args[0];
-            if (pathPtr !== undefined && pathPtr != null) {
-                var path = pathPtr.readCString();
-                console.log("[LOAD]", path);
-                if (path.indexOf(targetSoName) >= 0) {
-                    locate_init();
-                }
-            }
-        }
-    });
-    //定位检测
-    var flag = 0;
-    function locate_init() {
-        //hook _system_property_get("ro.build.version.sdk", v1);
-        Interceptor.attach(Module.findExportByName(null, "__system_property_get"), {
-            onEnter: function (args) {
-                var name = args[0];
-                if (name != null) {
-                    let nameStr = name.readCString();
-                    if (nameStr.indexOf("ro.build.version.sdk") >= 0) {
-                        if (flag == 0) {
-                            flag = 1;
-                            //1.定位线程函数
-                            //hook_pthread_create()
-                            //2.bypass
-                            bypass();
-                        }
-                    }
-                }
-            }
-        });
-    }
-    //定位线程函数
-    function hook_pthread_create() {
-        var base_addr = Process.findModuleByName(targetSoName).base;
-        console.log(targetSoName + " --- " + base_addr);
-        Interceptor.attach(Module.findExportByName("libc.so", "pthread_create"), {
-            onEnter(args) {
-                let func_addr = args[2];
-                console.log("The thread function address is " + func_addr + ` [${func_addr.sub(base_addr)}]`);
-            }
-        });
-    }
-    function nop64(addr) {
-        Memory.patchCode(addr, 4, code => {
-            const cw = new Arm64Writer(code, { pc: addr });
-            cw.putNop(); //ARM64只需执行一次putNop()即可。
-            cw.flush();
-        });
-    }
-    function bypass() {
-        let module = Process.findModuleByName("libmsaoaidsec.so");
-        // hook_pthread_create打印结果：
-        // libmsaoaidsec.so --- 0x7401b53000
-        // The thread function address is 0x751d86e2bc [0x11bd1b2bc]
-        // The thread function address is 0x751d86e2bc [0x11bd1b2bc]
-        // The thread function address is 0x7401b6f544 [0x1c544]
-        // The thread function address is 0x7401b6e8d4 [0x1b8d4]
-        // The thread function address is 0x7401b79e5c [0x26e5c]
-        // 注意：
-        // 下面NOP的这三个地址是调用pthread_create函数创建线程时的那条指令的地址，而不是那个函数的基地址，例如：
-        // LOAD:000000000001D2F0     ADRP            X2, #loc_1C544@PAGE
-        // LOAD:000000000001D2F4     ADD             X2, X2, #loc_1C544@PAGEOFF
-        // LOAD:000000000001D2F8     MOV             X0, SP
-        // LOAD:000000000001D2FC     MOV             X1, XZR
-        // LOAD:000000000001D300     MOV             X3, X21
-        // LOAD:000000000001D304     BLR             X19               <------  该地址才是我们要nop的地址
-        nop64(module.base.add(0x1D304));
-        nop64(module.base.add(0x1BE58));
-        nop64(module.base.add(0x27718));
-    }
-}
-✄
-{"version":3,"file":"frida_nop_thread_funcV2.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["android/antiFrida/msaoaidsec/frida_nop_thread_funcV2.ts"],"names":[],"mappings":"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"}
-✄
-/**
- * 参考文档：https://bbs.kanxue.com/thread-277034.htm
- 
-原理：
-第一步：hook dlopen函数，当加载libmsaoaidsec.so时，调用locate_init()函数，hook __sprintf_chk函数。
-第二步：调用__sprintf_chk函数时：
-    1.定位检测线程：调用hook_pthread_create()函数，对pthread_create函数进行hook，并打印线程函数地址。
-    2.bypass: 调用bypass()函数，该函数中nop或者patch掉三个地址，绕过检测。
-
-表现：
-哔哩哔哩  tv.danmaku.bili（通过）
-小红书    com.xingin.xhs （通过）
-爱奇艺    com.qiyi.video  （通过）
-携程旅行  ctrip.android.view （通过）
-
- */
-export function msa_nop_thread_funcV2() {
-    let targetSoName = 'libmsaoaidsec.so';
-    Interceptor.attach(Module.findExportByName(null, "android_dlopen_ext"), {
-        onEnter: function (args) {
-            var pathPtr = args[0];
-            if (pathPtr !== undefined && pathPtr != null) {
-                var path = pathPtr.readCString();
-                console.log("[LOAD]", path);
-                if (path.indexOf(targetSoName) >= 0) {
-                    locate_init();
-                }
-            }
-        }
-    });
-    var flag = 0;
-    function locate_init() {
-        Interceptor.attach(Module.findExportByName(null, "__sprintf_chk"), {
-            onEnter: function (args) {
-                if (flag == 0) {
-                    flag = 1;
-                    //1.定位
-                    //hook_pthread_create()
-                    //2.bypass
-                    bypass();
-                }
-            }
-        });
-    }
-    function hook_pthread_create() {
-        var base_addr = Process.findModuleByName(targetSoName).base;
-        console.log(targetSoName + " --- " + base_addr);
-        Interceptor.attach(Module.findExportByName("libc.so", "pthread_create"), {
-            onEnter(args) {
-                let func_addr = args[2];
-                console.log("The thread function address is " + func_addr + ` [${func_addr.sub(base_addr)}]`);
-            }
-        });
-    }
-    function patchFunc64(addr) {
-        Memory.patchCode(addr, 4, code => {
-            const cw = new Arm64Writer(code, { pc: addr });
-            cw.putRet();
-            cw.flush();
-        });
-    }
-    function nop64(addr) {
-        Memory.patchCode(addr, 4, code => {
-            const cw = new Arm64Writer(code, { pc: addr });
-            cw.putNop();
-            cw.flush();
-        });
-    }
-    function bypass() {
-        let module = Process.findModuleByName(targetSoName);
-        // hook_pthread_create日志打印：
-        // libmsaoaidsec.so --- 0x7401b53000
-        // The thread function address is 0x751d86e2bc [0x11bd1b2bc]
-        // The thread function address is 0x751d86e2bc [0x11bd1b2bc]
-        // The thread function address is 0x7401b6f544 [0x1c544]
-        // The thread function address is 0x7401b6e8d4 [0x1b8d4]
-        // The thread function address is 0x7401b79e5c [0x26e5c]
-        // 方式1：直接将三个线程函数(0x1c544, 0x1b8d4, 0x26e5c)的前4个字节改为ret指令
-        // patch64(module.base.add(0x1c544))
-        // patch64(module.base.add(0x1b8d4))
-        // patch64(module.base.add(0x26e5c))
-        //方式2：直接将创建线程的三个父函数的前4个字节改为ret指令
-        // patch64(module.base.add(0x1CEF8))
-        // patch64(module.base.add(0x1B924))
-        // patch64(module.base.add(0x2701C))
-        // 方式3：将创建线程的父函数调用pthread_create函数创建线程时的那条指令进行NOP
-        // 下面NOP的这三个地址是调用pthread_create函数创建线程时的那条指令的地址，而不是那个函数的基地址，例如：
-        // LOAD:000000000001D2F0     ADRP            X2, #loc_1C544@PAGE
-        // LOAD:000000000001D2F4     ADD             X2, X2, #loc_1C544@PAGEOFF
-        // LOAD:000000000001D2F8     MOV             X0, SP
-        // LOAD:000000000001D2FC     MOV             X1, XZR
-        // LOAD:000000000001D300     MOV             X3, X21
-        // LOAD:000000000001D304     BLR             X19               <------  该地址才是我们要nop的地址
-        nop64(module.base.add(0x1D304));
-        nop64(module.base.add(0x1BE58));
-        nop64(module.base.add(0x27718));
-    }
-}
-✄
-{"version":3,"file":"frida_replace_pthread_create.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["android/antiFrida/msaoaidsec/frida_replace_pthread_create.ts"],"names":[],"mappings":"AACA;;;;;;;;;;;;;;;;;;;;;;GAsBG;AAEH,MAAM,UAAU,0BAA0B;IAEtC,IAAI,YAAY,GAAG,kBAAkB,CAAA;IACrC,IAAI,mBAAmB,GAAG,0BAA0B,EAAE,CAAA;IAEtD,WAAW,CAAC,MAAM,CAAC,MAAM,CAAC,gBAAgB,CAAC,IAAI,EAAE,oBAAoB,CAAC,EAAE;QACpE,OAAO,EAAE,UAAU,IAAI;YAEnB,IAAI,OAAO,GAAG,IAAI,CAAC,CAAC,CAAC,CAAC;YACtB,IAAI,OAAO,KAAK,SAAS,IAAI,OAAO,IAAI,IAAI,EAAE;gBAC1C,IAAI,IAAI,GAAG,OAAO,CAAC,WAAW,EAAE,CAAC;gBACjC,OAAO,CAAC,GAAG,CAAC,QAAQ,EAAE,IAAI,CAAC,CAAA;gBAC3B,IAAI,IAAI,CAAC,OAAO,CAAC,YAAY,CAAC,IAAI,CAAC,EAAE;oBACjC,UAAU,EAAE,CAAA;iBACf;aACJ;QACL,CAAC;KACJ,CAAC,CAAC;IAOH,IAAI,KAAK,GAAG,CAAC,CAAA;IACb,SAAS,UAAU;QAEf,OAAO,CAAC,GAAG,CAAC,uBAAuB,CAAC,CAAA;QACpC,IAAI,WAAW,GAAG,WAAW,CAAC,MAAM,CAAC,MAAM,CAAC,gBAAgB,CAAC,IAAI,EAAE,OAAO,CAAC,EACvE;YACI,OAAO,EAAE,UAAU,IAAI;gBACnB,IAAI,QAAQ,GAAG,IAAI,CAAC,CAAC,CAAC,CAAC,WAAW,EAAE,CAAA;gBACpC,OAAO,CAAC,GAAG,CAAC,SAAS,EAAE,QAAQ,CAAC,CAAA;gBAChC,IAAI,QAAQ,IAAI,gBAAgB,EAAE;oBAC9B,KAAK,EAAE,CAAA;iBACV;YACL,CAAC;YACD,OAAO,EAAE,UAAU,MAAM;gBACrB,IAAI,KAAK,IAAI,CAAC,EAAE;oBACZ,MAAM,CAAC,OAAO,CAAC,mBAAmB,CAAC,CAAA;iBACtC;qBAAM,IAAI,KAAK,IAAI,CAAC,EAAE;oBACnB,MAAM,CAAC,OAAO,CAAC,mBAAmB,CAAC,CAAA;oBACnC,uBAAuB;oBACvB,WAAW,CAAC,MAAM,EAAE,CAAA;iBACvB;YACL,CAAC;SACJ,CACJ,CAAA;IACL,CAAC;IAGD,SAAS,0BAA0B;QAC/B,MAAM,OAAO,GAAG,MAAM,CAAC,KAAK,CAAC,IAAI,CAAC,CAAA;QAClC,MAAM,CAAC,OAAO,CAAC,OAAO,EAAE,IAAI,EAAE,KAAK,CAAC,CAAA;QACpC,MAAM,CAAC,SAAS,CAAC,OAAO,EAAE,IAAI,EAAE,IAAI,CAAC,EAAE;YACnC,MAAM,EAAE,GAAG,IAAI,WAAW,CAAC,IAAI,EAAE,EAAE,EAAE,EAAE,OAAO,EAAE,CAAC,CAAA;YACjD,EAAE,CAAC,MAAM,EAAE,CAAA;QACf,CAAC,CAAC,CAAA;QACF,OAAO,OAAO,CAAA;IAClB,CAAC;AAGL,CAAC"}
-✄
-/**
-参考文档：https://bbs.kanxue.com/thread-281584.htm
-
-原理：
-libmsaoaidsec.so创建frida检测线程时，其pthread_create函数是通过dlsym获取的，会调用两次；
-因此hook dlsym函数，当调用dlsym函数获取pthread_create函数地址时，替换为fake_pthread_create函数，从而绕过检测。
-
-
-可过frida检测，但是hook java层的函数，仍会被检测到，导致frida进程 Process terminated挂掉，
-可能原因：
-立即hook java会早于hook native，导致java层的hook函数被检测到，从而导致frida进程挂掉。
-
-解决方案：
-延迟几秒后，在Hook java层的函数。 例如 setTimeout(hook_activity, 3000)
-
-
-通杀使用libmsaoaidsec.so防护的所有App, 包括：
-哔哩哔哩  tv.danmaku.bili
-小红书    com.xingin.xhs
-爱奇艺    com.qiyi.video
-携程旅行  ctrip.android.view
-
- */
-export function msa_replace_pthread_create() {
-    let targetSoName = 'libmsaoaidsec.so';
-    var fake_pthread_create = create_fake_pthread_create();
-    Interceptor.attach(Module.findExportByName(null, "android_dlopen_ext"), {
-        onEnter: function (args) {
-            var pathPtr = args[0];
-            if (pathPtr !== undefined && pathPtr != null) {
-                var path = pathPtr.readCString();
-                console.log("[LOAD]", path);
-                if (path.indexOf(targetSoName) >= 0) {
-                    hook_dlsym();
-                }
-            }
-        }
-    });
-    var count = 0;
-    function hook_dlsym() {
-        console.log("=== HOOKING dlsym ===");
-        var interceptor = Interceptor.attach(Module.findExportByName(null, "dlsym"), {
-            onEnter: function (args) {
-                let funcName = args[1].readCString();
-                console.log("[dlsym]", funcName);
-                if (funcName == "pthread_create") {
-                    count++;
-                }
-            },
-            onLeave: function (retval) {
-                if (count == 1) {
-                    retval.replace(fake_pthread_create);
-                }
-                else if (count == 2) {
-                    retval.replace(fake_pthread_create);
-                    // 完成2次替换, 停止hook dlsym
-                    interceptor.detach();
-                }
-            }
-        });
-    }
-    function create_fake_pthread_create() {
-        const funcPtr = Memory.alloc(4096);
-        Memory.protect(funcPtr, 4096, "rwx");
-        Memory.patchCode(funcPtr, 4096, code => {
-            const cw = new Arm64Writer(code, { pc: funcPtr });
-            cw.putRet();
-        });
-        return funcPtr;
-    }
-}
-✄
-{"version":3,"file":"frida_unopen_msaoaidsec.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["android/antiFrida/msaoaidsec/frida_unopen_msaoaidsec.ts"],"names":[],"mappings":"AAAA;;;;;;;;;;;GAWG;AAEH,MAAM,UAAU,qBAAqB;IAEjC,IAAI,YAAY,GAAG,kBAAkB,CAAA;IACrC,WAAW,CAAC,MAAM,CAAC,MAAM,CAAC,gBAAgB,CAAC,IAAI,EAAE,oBAAoB,CAAC,EAAE;QACpE,OAAO,EAAE,UAAU,IAAI;YAEnB,IAAI,OAAO,GAAG,IAAI,CAAC,CAAC,CAAC,CAAC;YACtB,IAAI,OAAO,KAAK,SAAS,IAAI,OAAO,IAAI,IAAI,EAAE;gBAC1C,IAAI,IAAI,GAAG,OAAO,CAAC,WAAW,EAAE,CAAC;gBACjC,OAAO,CAAC,GAAG,CAAC,QAAQ,EAAC,IAAI,CAAC,CAAA;gBAC1B,IAAG,IAAI,CAAC,OAAO,CAAC,YAAY,CAAC,IAAI,CAAC,EAAC;oBAC/B,OAAO,CAAC,eAAe,CAAC,EAAE,CAAC,CAAC;iBAC/B;aAEJ;QACL,CAAC;KACJ,CAAC,CAAC;AACP,CAAC"}
-✄
-/**
- * 原理：
- * dlopen加载so库的时候，直接过滤掉 libmsaoaidsec.so。
- * 这样就没有frida检测了，但是App后续获取oaid失败。
- 
-通杀使用libmsaoaidsec.so防护的所有App, 包括：
-哔哩哔哩  tv.danmaku.bili
-小红书    com.xingin.xhs
-爱奇艺    com.qiyi.video
-携程旅行  ctrip.android.view
-
- */
-export function msa_unopen_msaoaidsec() {
-    let targetSoName = 'libmsaoaidsec.so';
-    Interceptor.attach(Module.findExportByName(null, "android_dlopen_ext"), {
-        onEnter: function (args) {
-            var pathPtr = args[0];
-            if (pathPtr !== undefined && pathPtr != null) {
-                var path = pathPtr.readCString();
-                console.log('path: ', path);
-                if (path.indexOf(targetSoName) >= 0) {
-                    pathPtr.writeUtf8String("");
-                }
-            }
-        }
-    });
-}
 ✄
 {"version":3,"file":"msa_nop_thread_func.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["android/antiFrida/msaoaidsec/msa_nop_thread_func.ts"],"names":[],"mappings":"AAAA;;;;;;;;;;;;;;;GAeG;AAKH,MAAM,UAAU,mBAAmB;IAE/B,IAAI,YAAY,GAAG,kBAAkB,CAAA;IACrC,WAAW,CAAC,MAAM,CAAC,MAAM,CAAC,gBAAgB,CAAC,IAAI,EAAE,oBAAoB,CAAC,EAAE;QACpE,OAAO,EAAE,UAAU,IAAI;YAEnB,IAAI,OAAO,GAAG,IAAI,CAAC,CAAC,CAAC,CAAC;YACtB,IAAI,OAAO,KAAK,SAAS,IAAI,OAAO,IAAI,IAAI,EAAE;gBAC1C,IAAI,IAAI,GAAG,OAAO,CAAC,WAAW,EAAE,CAAC;gBACjC,OAAO,CAAC,GAAG,CAAC,QAAQ,EAAE,IAAI,CAAC,CAAA;gBAC3B,IAAI,IAAI,CAAC,OAAO,CAAC,YAAY,CAAC,IAAI,CAAC,EAAE;oBACjC,WAAW,EAAE,CAAA;iBAChB;aACJ;QACL,CAAC;KACJ,CAAC,CAAC;IAGH,MAAM;IACN,IAAI,IAAI,GAAG,CAAC,CAAA;IACZ,SAAS,WAAW;QAEhB,wDAAwD;QACxD,WAAW,CAAC,MAAM,CAAC,MAAM,CAAC,gBAAgB,CAAC,IAAI,EAAE,uBAAuB,CAAC,EAAE;YAEvE,OAAO,EAAE,UAAU,IAAI;gBACnB,IAAI,IAAI,GAAG,IAAI,CAAC,CAAC,CAAC,CAAC;gBACnB,IAAI,IAAI,IAAI,IAAI,EAAE;oBACd,IAAI,OAAO,GAAG,IAAI,CAAC,WAAW,EAAE,CAAC;oBACjC,IAAI,OAAO,CAAC,OAAO,CAAC,sBAAsB,CAAC,IAAI,CAAC,EAAE;wBAE9C,IAAI,IAAI,IAAI,CAAC,EAAE;4BACX,IAAI,GAAG,CAAC,CAAA;4BAER,UAAU;4BACV,uBAAuB;4BAEvB,UAAU;4BACV,MAAM,EAAE,CAAA;yBACX;qBAEJ;iBACJ;YACL,CAAC;SACJ,CAAC,CAAC;IACP,CAAC;IAGD,QAAQ;IACR,SAAS,mBAAmB;QACxB,IAAI,SAAS,GAAG,OAAO,CAAC,gBAAgB,CAAC,YAAY,CAAC,CAAC,IAAI,CAAC;QAC5D,OAAO,CAAC,GAAG,CAAC,YAAY,GAAG,OAAO,GAAG,SAAS,CAAC,CAAA;QAC/C,WAAW,CAAC,MAAM,CAAC,MAAM,CAAC,gBAAgB,CAAC,SAAS,EAAE,gBAAgB,CAAC,EAAE;YACrE,OAAO,CAAC,IAAI;gBACR,IAAI,SAAS,GAAG,IAAI,CAAC,CAAC,CAAC,CAAA;gBACvB,OAAO,CAAC,GAAG,CAAC,iCAAiC,GAAG,SAAS,GAAG,KAAK,SAAS,CAAC,GAAG,CAAC,SAAS,CAAC,GAAG,CAAC,CAAA;YACjG,CAAC;SACJ,CAAC,CAAA;IACN,CAAC;IAGD,SAAS,KAAK,CAAC,IAAmB;QAC9B,MAAM,CAAC,SAAS,CAAC,IAAI,EAAE,CAAC,EAAE,IAAI,CAAC,EAAE;YAC7B,MAAM,EAAE,GAAG,IAAI,WAAW,CAAC,IAAI,EAAE,EAAE,EAAE,EAAE,IAAI,EAAE,CAAC,CAAC;YAC/C,EAAE,CAAC,MAAM,EAAE,CAAC,CAAG,wBAAwB;YACvC,EAAE,CAAC,KAAK,EAAE,CAAC;QACf,CAAC,CAAC,CAAC;IACP,CAAC;IAED,SAAS,MAAM;QAEX,IAAI,MAAM,GAAG,OAAO,CAAC,gBAAgB,CAAC,kBAAkB,CAAC,CAAA;QAEzD,2BAA2B;QAC3B,oCAAoC;QACpC,4DAA4D;QAC5D,4DAA4D;QAC5D,wDAAwD;QACxD,wDAAwD;QACxD,wDAAwD;QAExD,MAAM;QACN,8DAA8D;QAC9D,gEAAgE;QAChE,uEAAuE;QACvE,mDAAmD;QACnD,oDAAoD;QACpD,oDAAoD;QACpD,sFAAsF;QAEtF,KAAK,CAAC,MAAM,CAAC,IAAI,CAAC,GAAG,CAAC,OAAO,CAAC,CAAC,CAAA;QAC/B,KAAK,CAAC,MAAM,CAAC,IAAI,CAAC,GAAG,CAAC,OAAO,CAAC,CAAC,CAAA;QAC/B,KAAK,CAAC,MAAM,CAAC,IAAI,CAAC,GAAG,CAAC,OAAO,CAAC,CAAC,CAAA;IAEnC,CAAC;AAIL,CAAC"}
 ✄
@@ -2296,7 +2043,7 @@ export var Base;
     // export let syscallTable = ZZSyscallTable
 })(Base || (Base = {}));
 ✄
-{"version":3,"file":"zzCallStack.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["base/zzCallStack.ts"],"names":[],"mappings":"AAGA;;;GAGG;AACH,MAAM,KAAW,WAAW,CAqF3B;AArFD,WAAiB,WAAW;IAIxB,qFAAqF;IAErF,cAAc;IACd,SAAgB,mBAAmB;QAC/B,OAAO,CAAC,GAAG,CAAC,IAAI,CAAC,GAAG,CAAC,kBAAkB,CAAC,CAAC,mBAAmB,CAAC,IAAI,CAAC,GAAG,CAAC,qBAAqB,CAAC,CAAC,IAAI,EAAE,CAAC,CAAC,CAAC;IAC1G,CAAC;IAFe,+BAAmB,sBAElC,CAAA;IAED,gBAAgB;IAChB,SAAgB,qBAAqB,CAAC,OAAY;QAC9C,OAAO,CAAC,GAAG,CAAC,iBAAiB,GAAG,MAAM,CAAC,SAAS,CAAC,OAAO,EAAE,UAAU,CAAC,QAAQ,CAAC,CAAC,GAAG,CAAC,WAAW,CAAC,WAAW,CAAC,CAAC,IAAI,CAAC,IAAI,CAAC,GAAG,IAAI,CAAC,CAAC;IACnI,CAAC;IAFe,iCAAqB,wBAEpC,CAAA;IAGD,qFAAqF;IAErF;;;;OAIG;IACH,SAAgB,kBAAkB,CAAC,OAAmB;QAClD,IAAI,UAAU,GAAG,IAAI,CAAC,SAAS,CAAC,OAAO,CAAC,CAAA;QACxC,OAAO,UAAU,CAAA;IACrB,CAAC;IAHe,8BAAkB,qBAGjC,CAAA;IAID;;;;OAIG;IACH,SAAgB,KAAK,CAAC,OAAmB;QACrC,IAAI,OAAO,CAAC,IAAI,IAAI,KAAK,EAAE;YACvB,OAAQ,OAAyB,CAAC,EAAE,CAAC;SACxC;aACI,IAAI,OAAO,CAAC,IAAI,IAAI,OAAO,EAAE;YAC9B,OAAQ,OAA2B,CAAC,EAAE,CAAC;SAC1C;aACI;YACD,OAAO,CAAC,GAAG,CAAC,4BAA4B,GAAG,OAAO,CAAC,IAAI,CAAC,CAAC;SAC5D;QACD,OAAO,GAAG,CAAC,CAAC,CAAC,CAAC;IAClB,CAAC;IAXe,iBAAK,QAWpB,CAAA;IAID;;;;OAIG;IACH,SAAgB,kBAAkB,CAAC,OAAmB,EAAE,MAAc;QAClE,IAAI,EAAE,GAAkB,OAAO,CAAC,EAAE,CAAC;QAEnC,KAAK,IAAI,CAAC,GAAG,CAAC,EAAE,CAAC,GAAG,MAAM,EAAE,CAAC,EAAE,EAAE;YAC7B,IAAI,KAAK,GAAG,EAAE,CAAC,GAAG,CAAC,OAAO,CAAC,WAAW,GAAG,CAAC,CAAC,CAAC;YAC5C,OAAO,CAAC,GAAG,CAAC,2BAA2B,GAAG,KAAK,GAAG,SAAS,GAAG,KAAK,CAAC,WAAW,EAAE;kBAC3E,YAAY,GAAG,mBAAmB,CAAC,KAAK,CAAC,WAAW,EAAE,CAAC,CAAC,CAAC;SAClE;IACL,CAAC;IARe,8BAAkB,qBAQjC,CAAA;IAED;;;;OAIG;IACH,SAAS,mBAAmB,CAAC,IAAmB;QAC5C,IAAI,MAAM,GAAG,IAAI,CAAC;QAClB,OAAO,CAAC,gBAAgB,EAAE,CAAC,OAAO,CAAC,UAAU,MAAc;YACvD,IAAI,MAAM,CAAC,IAAI,IAAI,IAAI,IAAI,IAAI,IAAI,CAAC,MAAM,CAAC,IAAI,CAAC,GAAG,CAAC,MAAM,CAAC,IAAI,CAAC,CAAC,EAAE;gBAC/D,MAAM,GAAG,IAAI,CAAC,SAAS,CAAC,MAAM,CAAC,CAAC;gBAChC,OAAO,KAAK,CAAC,CAAC,OAAO;aACxB;QACL,CAAC,CAAC,CAAC;QACH,OAAO,MAAM,CAAC;IAClB,CAAC;AAKL,CAAC,EArFgB,WAAW,KAAX,WAAW,QAqF3B"}
+{"version":3,"file":"zzCallStack.js","sourceRoot":"C:/Users/zzc/Desktop/frida-tools/frida-tools/","sources":["base/zzCallStack.ts"],"names":[],"mappings":"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"}
 ✄
 /**
  * 函数堆栈信息
@@ -2315,6 +2062,38 @@ export var ZZCallStack;
         console.log(' called from:\n' + Thread.backtrace(context, Backtracer.ACCURATE).map(DebugSymbol.fromAddress).join('\n') + '\n');
     }
     ZZCallStack.printNativeCallstacks = printNativeCallstacks;
+    function printNativeCallstacksV2(context) {
+        let addr = stacktrace(context, 30);
+        console.log(' called from:\n' + addr.map(DebugSymbol.fromAddress).join('\n') + '\n');
+    }
+    ZZCallStack.printNativeCallstacksV2 = printNativeCallstacksV2;
+    function stacktrace(context, number) {
+        var sp = context.sp;
+        var fp = context.fp;
+        var pc = context.pc;
+        console.log("sp = " + sp.toString() + ", fp = " + fp.toString() + ", pc = " + pc.toString() + "\n");
+        let n = 0;
+        let stack_arr = [];
+        stack_arr[n++] = pc;
+        let cur_fp = fp;
+        while (n < number) {
+            //判断栈的有效性
+            if (parseInt(cur_fp.toString()) < parseInt(sp.toString())) {
+                break;
+            }
+            //读取上一个栈帧
+            let pre_fp = cur_fp.readPointer();
+            let lr = cur_fp.add(8).readPointer();
+            console.log("pre_fp = " + pre_fp.toString() + ", lr = " + lr.toString() + "\n");
+            if (lr.toInt32() == 0) {
+                break;
+            }
+            cur_fp = pre_fp;
+            stack_arr[n++] = lr;
+        }
+        console.log("addr = ", stack_arr);
+        return stack_arr;
+    }
     //================================= 当前函数栈信息 =========================================
     /**
      * 获取当前上下文寄存器信息，返回JSON字符串
