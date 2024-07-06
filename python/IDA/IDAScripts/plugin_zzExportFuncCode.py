@@ -34,7 +34,12 @@ def getSegAddr():
             textStart.append(tempStart)
             textEnd.append(tempEnd)
 
-    return min(textStart), max(textEnd)
+    if len(textStart) > 0:
+        return min(textStart), max(textEnd)
+    else:
+        return 0, idc.BADADDR
+
+    
 
 
 class ExportFuncCode(plugin_t):
