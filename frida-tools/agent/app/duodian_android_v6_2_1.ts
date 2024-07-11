@@ -15,6 +15,8 @@ import { Base } from "../../base/zzBase.js";
 
 
 // 多点V6.2.1:com.wm.dmall; 应用宝下载
+// 参考：https://bbs.kanxue.com/thread-281761.htm
+
 export function main() {
 
     //1.定位frida检测的so库
@@ -37,7 +39,7 @@ export function main() {
 
 
 
-    
+
     AndUI.hook_ui()
     // AndHttps.hook_https()
     // AndSocket.hook_socket()

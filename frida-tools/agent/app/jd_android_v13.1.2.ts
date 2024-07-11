@@ -13,9 +13,17 @@ import { Base } from "../../base/zzBase.js";
  */
 export function main() {
 
-//anti_jd_frida()
+    //anti_jd_frida()
 
-AndUI.hook_ui()
+    // AndUI.hook_ui()
 
+    //mod_init_func hook和print测试
+    // let soName = "libJDMobileSec.so"
+    // //AndSo.print_module_init_func(soName)
+    // AndSo.hook_module_init_func(soName, function (addr: NativePointer) {
+    //     console.log(`aaaaaaaaaaaaaa ==> ${soName} : ${addr}`)
+    // }, function (addr: NativePointer) {
+
+    // });
 }
 

@@ -9,10 +9,12 @@ import * as antiMSA from "./app/anti_msaoaidsec.js"
 
 import * as jingdong from "./app/jd_android_v13.1.2.js"
 
+import * as gonghang from "./app/gonghang_android_v13.1.2.js"
+
 
 //antiMSA.main()
 
-jingdong.main()
+gonghang.main()
 
 
 

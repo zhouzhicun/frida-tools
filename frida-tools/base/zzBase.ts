@@ -11,10 +11,7 @@ import { ZZPatch } from "./zzPatch.js";
 import { ZZStringUtils } from "./zzStringUtils.js";
 import { ZZNativeFunc } from "./zzNativeFunc.js";
 
-
-
-
-// import { ZZSyscallTable } from "./zzSyscallTable.js";
+import { ZZSyscallTable } from "./zzSyscallTable.js";
 
 
 
@@ -27,8 +24,7 @@ export namespace Base {
     export let zzPatch = ZZPatch
     export let zzStringUtils = ZZStringUtils
     export let zzNativeFunc = ZZNativeFunc
-
-    // export let syscallTable = ZZSyscallTable
+    export let syscallTable = ZZSyscallTable
 
     
 

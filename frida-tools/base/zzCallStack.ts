@@ -29,9 +29,9 @@ export namespace ZZCallStack {
 
     function stacktrace(context: Arm64CpuContext, number: number) {
 
-        var sp: NativePointer = context.sp;
-        var fp: NativePointer = context.fp;
-        var pc: NativePointer = context.pc;
+        var fp: NativePointer = context.fp;  //x29
+        var sp: NativePointer = context.sp;  //x31
+        var pc: NativePointer = context.pc;  
 
         console.log("sp = " + sp.toString() + ", fp = " + fp.toString() + ", pc = " + pc.toString() + "\n")
 
