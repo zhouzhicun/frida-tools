@@ -13,16 +13,21 @@ import { Base } from "../../base/zzBase.js";
 //见圳v3.7.5:com.sznews; 应用宝下载
 export function main() {
 
-    let soName = "libxloader.so"
-    AndSo.print_module_init_func(soName)
+    let targetSoName = "libxloader.so"
 
+    AndSo.hook_linker_call_constructor(targetSoName, function() {
+        
+        let targetModule = Process.getModuleByName(targetSoName)
+        console.log("libtongdun.base = " + targetModule.base)
 
-    // AndSo.hook_mod_init_func(soName, function (addr: NativePointer) {
+        // Base.zzPatch.nopInsn64_batch_by_offset(targetSoName, [0xD9730, 0xD98CC, 0xD96A4])
+        // Base.zzPatch.nopFunc64_batch_by_offset(targetSoName, [0xD9224])
 
-    //     Thread.sleep(3000);
+        //Base.zzStalkerTrace.traceFunction(targetSoName, 0xD9098)
 
-    // }, function(addr: NativePointer) {
+        //Base.zzStalkerTrace.traceInsn(targetSoName, 0xD9108)
 
-    // })
+    })
+
 
 }

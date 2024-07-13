@@ -7,6 +7,16 @@
 //==========================================================
 
 
+   //获取java对象的类名
+export function get_class_name(object) {
+    if (object !== null) {
+        return object.getClass().getName();
+    } else {
+        return null;
+    }
+}
+
+
 export function load_dex(path) {
 
     //例如动态加载 okhttp3logging.dex:  path = "/data/local/tmp/okhttp3logging.dex"

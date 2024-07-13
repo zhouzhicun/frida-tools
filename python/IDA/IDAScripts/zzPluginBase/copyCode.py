@@ -16,7 +16,8 @@ def get_regName(addr):
     print("asm => " + disasm)
     disasm = disasm.upper()
     parts = disasm.split()
-    if (parts[0] == 'BR') and len(parts) > 1:
+    isBXX = parts[0] == 'B' or parts[0] == 'BR' or parts[0] == "BLR" or parts[0] == "BL" 
+    if (isBXX) and len(parts) > 1:
         return parts[1]
     else:
         return ""

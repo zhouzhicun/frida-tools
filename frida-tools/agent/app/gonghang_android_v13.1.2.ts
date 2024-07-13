@@ -15,8 +15,29 @@ export function main() {
     let targetSoName = 'libtongdun.so'
     let bundleName = "com.icbc"
 
-    AndSo.print_module_init_func(targetSoName)
+    AndSo.hook_linker_call_constructor(targetSoName, function() {
+        
+        let targetModule = Process.getModuleByName(targetSoName)
 
+        //打印so的base地址
+        console.log("libtongdun.base = " + targetModule.base)
+
+        // //nop掉maps檢查
+        // Base.zzPatch.nopInsn64_batch_by_offset(targetSoName, [0xD9730])
+
+        // //hook .init_proc函數, 执行结束时 dump so文件
+        // Interceptor.attach(targetModule.base.add(0xD9098), {
+        //     onLeave: function() {
+        //         AndSo.dump_so(targetSoName, bundleName)
+        //         //AntiNativeDebug.anti_exit()
+        //     }
+        // })
+
+
+        Base.zzStalkerTrace.traceInsn(targetSoName, 0xD90A0)
+
+        
+    })
 
 }
 

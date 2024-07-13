@@ -4,33 +4,6 @@ import { ZZStringUtils } from "./zzStringUtils.js";
 export namespace ZZPatch {
 
 
-    /************************* java ******************************** */
-
-    //获取java对象的类名
-    export function get_class_name(object: any) {
-        if (object !== null) {
-            return object.getClass().getName();
-        } else {
-            return null;
-        }
-    }
-
-
-
-    //打印分割线
-    export function print_divider(tips: string = '') {
-        console.log(`==============================${tips}==============================`)
-    }
-
-    //打印参数
-    export function print_arguments() {
-        console.log('arguments: ', ...arguments)
-    }
-
-
-
-  
-
 
     //======================================== NOP函数系列 =================================================
 

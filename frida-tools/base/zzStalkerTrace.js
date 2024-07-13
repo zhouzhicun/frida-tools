@@ -15,7 +15,7 @@ SOUtils.hook_dlopen("libencrypt.so", function () {
     //onEnter
 }, function() {
     //onLeave
-    fridaTrace.traceInsnAddr("libencrypt.so", 0x3D1A0)
+    fridaTrace.traceInsn("libencrypt.so", 0x3D1A0)
 });
  
 
@@ -200,10 +200,10 @@ export function stalkerTraceRange(tid, base, size) {
 
 // ---------------------------------------------------------------------------------------
 
-// traceInsnAddr(soName, hook_offset_addr)
+// traceInsn(soName, hook_offset_addr)
 // ---------------------------------------------------------------------------------------
 
-export function traceInsnAddr(soName, hook_offset_addr) {
+export function traceInsn(soName, hook_offset_addr, stopOnLeave = true) {
 
     //1.获取模块基址和大小
     let targetModule = Process.findModuleByName(soName);
@@ -220,10 +220,13 @@ export function traceInsnAddr(soName, hook_offset_addr) {
         },
 
         onLeave: function(ret) {
-            Stalker.unfollow(this.tid);
-            Stalker.garbageCollect();
-            console.log('ret: ' + ret);
-            console.log('-----end trace------');
+
+            if(stopOnLeave) {
+                Stalker.unfollow(this.tid);
+                Stalker.garbageCollect();
+                console.log('ret: ' + ret);
+                console.log('-----end trace------');
+            }
         }
     });
 }
@@ -233,7 +236,7 @@ export function traceInsnAddr(soName, hook_offset_addr) {
 // traceFunction(soName, hook_offset_addr)
 // ---------------------------------------------------------------------------------------
 // 打印调用堆栈
-export function traceFunction(soName, hook_offset_addr) {
+export function traceFunction(soName, hook_offset_addr, stopOnLeave = true) {
 
     console.log("-------------- traceFunction -------------------")
     
@@ -277,7 +280,7 @@ export function traceFunction(soName, hook_offset_addr) {
                                 for (let j = 0; j < length; j++) {
                                     space_num = space_num + ' ';
                                 }
-                                description = space_num + target_description + '(' + location_description + ')' + ' -- ' + length;
+                                description = space_num + "call func: " + target_description + '( at offset: ' + location_description + ')' + ' -- ' + length;
                                 console.log(description); 
                             } 
                         }
@@ -285,7 +288,9 @@ export function traceFunction(soName, hook_offset_addr) {
                 }
             })
         }, onLeave: function(retval) {
-            Stalker.unfollow(this.tid);
+            if(stopOnLeave) {
+                Stalker.unfollow(this.tid);
+            }
         }
     })
 }
