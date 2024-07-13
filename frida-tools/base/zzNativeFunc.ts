@@ -50,11 +50,6 @@ export namespace ZZNativeFunc {
         startAddr.writeAnsiString(str);
     }
 
-
-
-
-
-
     /**
      * 从内存中搜索特征数据, 例如：
      * arm64 svc 0 : 010000D4
@@ -79,6 +74,21 @@ export namespace ZZNativeFunc {
         });
 
         return matchedArr
+    }
+
+
+    //监控内存访问: 只会触发一次; 参考：https://blog.csdn.net/fenfei331/article/details/123523182
+    export function accessMemoryMonitor(soName: string, offset: number, memSize: number) {
+        var module = Process.getModuleByName(soName);
+        var targetAddr = module.base.add(offset);
+        MemoryAccessMonitor.enable({
+            base: targetAddr,
+            size: memSize,
+        }, {
+            onAccess: function(details) {
+                console.log("access memory at: 0x" + details.address.sub(module.base).toString(16))
+            },
+        })
     }
 
 

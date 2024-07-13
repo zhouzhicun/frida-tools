@@ -27,6 +27,7 @@ export namespace ZZCallStack {
         console.log(' called from:\n' + addr.map(DebugSymbol.fromAddress).join('\n') + '\n');
     }
 
+
     function stacktrace(context: Arm64CpuContext, number: number) {
 
         var fp: NativePointer = context.fp;  //x29
@@ -46,7 +47,7 @@ export namespace ZZCallStack {
             if (parseInt(cur_fp.toString()) < parseInt(sp.toString())) {
                 break
             }
-            //读取上一个栈帧
+            //读取上一个栈帧, ARM堆栈特征：FP指向上一个栈帧的FP，且FP上面是LR。
             let pre_fp = cur_fp.readPointer()
             let lr = cur_fp.add(8).readPointer()
     
@@ -77,27 +78,6 @@ export namespace ZZCallStack {
         let regContext = JSON.stringify(context)
         return regContext
     }
-
-
-
-    /**
-     * 获取 LR 寄存器值
-     * @param {CpuContext} context
-     * @returns {NativePointer}
-     */
-    export function getLR(context: CpuContext) {
-        if (Process.arch == 'arm') {
-            return (context as ArmCpuContext).lr;
-        }
-        else if (Process.arch == 'arm64') {
-            return (context as Arm64CpuContext).lr;
-        }
-        else {
-            console.log('not support current arch: ' + Process.arch);
-        }
-        return ptr(0);
-    }
-
 
 
     /**
