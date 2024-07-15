@@ -1,8 +1,16 @@
 
 
 import { Base } from "../../base/zzBase.js";
+import * as Dump from "./AndDump.js"
 
 export namespace AndSo {
+
+    export enum DumpMethod {
+        frida,
+        fwrite,
+        syscall
+    }
+
 
     /************************************** helper **************************************************** */
 
@@ -37,35 +45,86 @@ export namespace AndSo {
 
     /************************************** dump操作 **************************************************** */
 
-    export function dump_root_path(bundleName: string) {
+    export function get_dump_root_path(bundleName: string) {
         return "/data/data/" + bundleName + "/"
     }
 
-    //dump 指定so库, 并保存到/data/data/bundleName/目录下
-    export function dump_so(soName: string, bundleName: string) {
+    export function get_dump_file_path(bundleName: string, soName: string, base: NativePointer, size: number) {
+        var savePath = get_dump_root_path(bundleName)
+        var fileName = soName.replace(".so", "") + "_" + base + "_" + base.add(size) + ".bin";
+        return savePath + fileName
+    }
 
-        var targetModule = Process.getModuleByName(soName);
-        var savePath = dump_root_path(bundleName)
-        var dump_file_path = savePath + soName.replace(".so", "") + targetModule.base + "_" + targetModule.base.add(targetModule.size) + ".bin";
+
+    //dump 指定so库, 并保存到/data/data/bundleName/目录下
+    export function dump_so(bundleName: string, soName: string, dumpMethod: DumpMethod = DumpMethod.frida) {
 
         //写文件
-        var success = write_dump_to_file(dump_file_path, targetModule.base, targetModule.size);
+        var targetModule = Process.getModuleByName(soName);
+        var dump_file_path = get_dump_file_path(bundleName, soName, targetModule.base, targetModule.size);
+        
+        var success = false
+        switch (dumpMethod) {
+            case DumpMethod.frida:
+                success = Dump.write_mem_to_file(dump_file_path, targetModule.base, targetModule.size);
+                break;
+            case DumpMethod.fwrite:
+                success = Dump.write_mem_to_file_by_fwrite(dump_file_path, targetModule.base, targetModule.size);
+                break;
+            case DumpMethod.syscall:
+                success = Dump.write_mem_to_file_by_syscall(dump_file_path, targetModule.base, targetModule.size)
+                break;
+            default:
+                break;
+        }
+
         if (success) {
             console.log("[dump so]:", dump_file_path);
+        } else {
+            console.log("[dump so]:  dump failed");
+        }
+    }
+
+
+    export function dump_memory(bundleName: string, soName: string, offset: number, size: number, dumpMethod: DumpMethod = DumpMethod.frida) {
+
+        var base_addr = Module.findBaseAddress(soName);
+        var dump_file_path = get_dump_file_path(bundleName, soName, base_addr.add(offset), size);
+   
+        var success = false
+        switch (dumpMethod) {
+            case DumpMethod.frida:
+                success = Dump.write_mem_to_file(dump_file_path, base_addr.add(offset), size);
+                break;
+            case DumpMethod.fwrite:
+                success = Dump.write_mem_to_file_by_fwrite(dump_file_path, base_addr.add(offset), size);
+                break;
+            case DumpMethod.syscall:
+                success = Dump.write_mem_to_file_by_syscall(dump_file_path, base_addr.add(offset), size)
+                break;
+            default:
+                break;
+        }
+
+        if (success) {
+            console.log("[dump memory]:", dump_file_path);
+        } else {
+            console.log("[dump memory]: dump failed");
         }
     }
 
 
     //dump指定so的导出符号列表, 并保存到/data/data/bundleName/目录下
-    export function dump_so_export_symbols(soName: string, bundleName: string) {
+    export function dump_so_export_symbols(bundleName: string, soName: string) {
 
         var targetModule = Process.findModuleByName(soName);
         var exportSymbols = targetModule.enumerateExports();
 
 
         //写文件
-        var savePath = dump_root_path(bundleName)
-        var dump_file_path = savePath + soName.replace(".so", "") + "_symbols.log";
+        var savePath = get_dump_root_path(bundleName)
+        var fileName = soName.replace(".so", "") + "_symbols.log"
+        var dump_file_path = savePath + fileName
         console.log("dump_file_path = ", dump_file_path);
 
         var file_handle = new File(dump_file_path, "a+");
@@ -79,37 +138,6 @@ export namespace AndSo {
 
     }
 
-    export function dump_memory(soName: string, offset: number, length: number, bundleName: string) {
-
-        var base_addr = Module.findBaseAddress(soName);
-        var dump_start_addr = base_addr.add(offset);
-        console.log(hexdump(dump_start_addr, { length: length }));
-
-
-        //写文件
-        var savePath = dump_root_path(bundleName)
-        var dump_file_path = savePath + dump_start_addr + "_" + dump_start_addr.add(length) + ".bin";
-
-        var success = write_dump_to_file(dump_file_path, dump_start_addr, length);
-        if (success) {
-            console.log("[dump memory]:", dump_file_path);
-        }
-    }
-
-    function write_dump_to_file(dump_file_path: string, base: NativePointer, size: number): boolean {
-
-        var file_handle = new File(dump_file_path, "wb");
-        if (file_handle && file_handle != null) {
-            Memory.protect(base, size, 'rwx');
-            var libso_buffer = base.readByteArray(size);
-            file_handle.write(libso_buffer);
-            file_handle.flush();
-            file_handle.close();
-            return true;
-        }
-        return false;
-
-    }
 
     /************************************************************************************** */
 
@@ -127,7 +155,6 @@ export namespace AndSo {
                     console.log("[LOAD] ==> " + so_name);
 
                 }, onLeave: function (retval) {
-                    Thread.sleep(3)
                 }
             });
         }
@@ -165,8 +192,6 @@ export namespace AndSo {
             });
         }
     }
-
-
 
 
 
