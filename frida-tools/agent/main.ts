@@ -11,12 +11,12 @@ import * as jingdong from "./app/jd_android_v13.1.2.js"
 
 import * as gonghang from "./app/gonghang_android_v13.1.2.js"
 
-import * as mouse from "./app/mouse.js"
+import * as mouse from "./app/tx_mouse.js"
+
+import * as ace from "./app/tx_ace.js"
 
 
 //antiMSA.main()
 
-mouse.main()
-
-
+ace.main()
 

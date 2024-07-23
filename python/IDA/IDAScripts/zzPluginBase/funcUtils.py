@@ -4,9 +4,88 @@ import idaapi
 import idc
 import ida_nalt
 import ida_entry
+import ida_ida
 
 from operator import itemgetter
+import zzPluginBase.utils as utils
 
+
+
+################################## dump反编译的伪代码 ############################################
+
+#dump指定地址范围的反编译伪代码
+def get_func_code(start, end): 
+    code = ""
+    for func in idautils.Functions(start, end):
+        #反编译函数，得到伪代码
+        code += str(idaapi.decompile(func)) + "\n\n"
+    return code
+
+
+#dump指定节的反编译伪代码， 如果segName=None, 则dump所有函数的伪代码
+def get_all_func_code(segNames = None):
+    if segNames is None:
+        return get_func_code(0, idc.BADADDR)
+
+    resultCode = ''
+    for segName in segNames:
+        seg = idaapi.get_segm_by_name(segName)
+        if seg is None:
+            continue
+        start = seg.start_ea
+        end = seg.end_ea
+        resultCode += get_func_code(start, end)
+    return resultCode
+
+
+
+def get_all_instructions(pattern = None):
+    # 获取程序的起始地址和结束地址
+    start_address = idc.get_inf_attr(idc.INF_MIN_EA)
+    end_address = idc.get_inf_attr(idc.INF_MAX_EA)
+
+    # 遍历每一条指令
+    result = ''
+    for address in idautils.Heads(start_address, end_address):
+        if idc.is_code(idc.get_full_flags(address)):
+            # 获取指令的反汇编文本
+            disasm = idc.generate_disasm_line(address, 0)
+            if disasm:
+                if pattern == None:
+                    result += f"0x{address:08X}: {disasm}" + '\n'
+                else:
+                    if pattern in disasm:
+                        result += f"0x{address:08X}: {disasm}" + '\n'
+    
+    return result
+               
+
+
+
+
+################################## 获取函数列表 ############################################
+
+##常量定义
+dump_func_divider = "\n-------------------------------dump func list --------------------------------\n"
+func_field_name = "funcName"
+func_field_address = "address"
+func_field_xrefCount = "xrefCount"
+func_field_insnCount = "insnCount"
+func_field_rate = "rate"
+func_field_topNum = 50
+
+
+#获取函数列表
+def get_func_list():
+    funcList = ""
+    maxAddress = ida_ida.inf_get_max_ea()
+    for func in idautils.Functions(0, maxAddress):
+        if len(list(idautils.FuncItems(func))) > 50:
+            functionName = str(idaapi.ida_funcs.get_func_name(func))
+            oneFunction = hex(func) + "!" + functionName + "\t\n"
+            funcList += oneFunction
+    print(funcList)
+    return funcList
 
 
 #获取函数列表，按照xref数量排序
@@ -15,24 +94,41 @@ def get_func_list_orderby_xref():
     for func in idautils.Functions():
         xrefs = idautils.CodeRefsTo(func, 0)
         xrefCount = len(list(xrefs))
-        oneFuncDict = {"funcName":idc.get_func_name(func), "Address": hex(func), "xrefCount": xrefCount}
+        oneFuncDict = {
+            func_field_name: idc.get_func_name(func), 
+            func_field_address: hex(func), 
+            func_field_xrefCount: xrefCount
+            }
         functionList.append(oneFuncDict)
+    function_list_by_countNum = sorted(functionList, key=itemgetter(func_field_xrefCount), reverse=True)
 
-    function_list_by_countNum = sorted(functionList, key=itemgetter('xrefCount'),reverse=True)
-    for func in function_list_by_countNum[:20]:
-        print(func)
+    funcList = dump_func_divider
+    for func in function_list_by_countNum[:func_field_topNum]:
+        funcList += f'{func_field_name}:{func[func_field_name]}, {func_field_address}:{func[func_field_address]}, {func_field_xrefCount}:{func[func_field_xrefCount]}\n'
+    print(funcList)
+    return funcList
+
+
 
 #获取函数列表，按照指令数量排序
 def get_func_list_orderby_insn_count():
     functionList = []
     for func in idautils.Functions():
         insnCount = idc.get_func_attr(func, idc.FUNCATTR_END) - idc.get_func_attr(func, idc.FUNCATTR_START)
-        oneFuncDict = {"funcName":idc.get_func_name(func), "Address": hex(func), "insnCount": insnCount}
+        oneFuncDict = {
+            func_field_name: idc.get_func_name(func), 
+            func_field_address: hex(func), 
+            func_field_insnCount: insnCount
+        }
         functionList.append(oneFuncDict)
 
-    function_list_by_countNum = sorted(functionList, key=itemgetter('insnCount'),reverse=True)
-    for func in function_list_by_countNum[:20]:
-        print(func)
+    function_list_by_countNum = sorted(functionList, key=itemgetter(func_field_insnCount), reverse=True)
+  
+    funcList = dump_func_divider
+    for func in function_list_by_countNum[:func_field_topNum]:
+        funcList += f'{func_field_name}:{func[func_field_name]}, {func_field_address}:{func[func_field_address]}, {func_field_insnCount}:{func[func_field_insnCount]}\n'
+    print(funcList)
+    return funcList
 
 
 #获取函数列表，按照加解密特征指令数量排序(LSL, AND, ORR, LSR, ROR)
@@ -50,12 +146,22 @@ def get_func_list_orderby_eor():
                 if m.startswith("LSL") | m.startswith("AND") | m.startswith("ORR") | m.startswith("LSR") | m.startswith("ROR"):
                     count += 1
 
-            oneFuncDict = {"funcName": funcName, "Address": hex(addr), "rate": count / length}
+    
+            oneFuncDict = {
+                func_field_name: funcName, 
+                func_field_address: hex(addr), 
+                func_field_rate: count / length
+            }
             functionList.append(oneFuncDict)
 
-    function_list_by_countNum = sorted(functionList, key=itemgetter('rate'), reverse=True)
-    for func in function_list_by_countNum[:20]:
-        print(func)
+    function_list_by_countNum = sorted(functionList, key=itemgetter(func_field_rate), reverse=True)
+
+    funcList = dump_func_divider
+    for func in function_list_by_countNum[:func_field_topNum]:
+        funcList += f'{func_field_name}:{func[func_field_name]}, {func_field_address}:{func[func_field_address]}, {func_field_rate}:{func[func_field_rate]}\n'
+    print(funcList)
+    return funcList
+
 
 
 #获取导出函数列表
@@ -65,33 +171,31 @@ def get_export_func_list():
     
     # 获取当前二进制文件的导入函数数量
     n = ida_entry.get_entry_qty()
-    
-    # 遍历每一个导入函数
     for i in range(0, n):
         # 获取第 i 个导入函数的序号
         ordinal = ida_entry.get_entry_ordinal(i)
-        
         # 使用序号获取导入函数的地址
         ea = ida_entry.get_entry(ordinal)
-        
         # 使用序号获取导入函数的名称
         name = ida_entry.get_entry_name(ordinal)
-        
         # 将导入函数的名称和地址作为一个字典添加到列表中
-        exports.append({"funcName": name, "addr": ea})
+        exports.append({func_field_name: name, func_field_address: hex(ea)})
     
-    # 打印所有导入函数的信息
-    print("===============导出函数列表===================")
-    print(exports)
-    return exports
+    funcList = dump_func_divider
+    for func in exports:
+        funcList += f'{func_field_name}:{func[func_field_name]}, {func_field_address}:{func[func_field_address]}\n'
+    print(funcList)
+    return funcList
+
 
 
 #获取导入函数列表
 def get_import_func_list():
+
     def imp_cb(ea, name, ord):
         if not name:
             name = ''
-        imports.append({"funcName": name, "addr": ea})
+        imports.append({func_field_name: name, func_field_address: hex(ea)})
         return True
 
     imports = []
@@ -99,7 +203,10 @@ def get_import_func_list():
     for i in range(0, nimps):
         ida_nalt.enum_import_names(i, imp_cb)
 
-    print("===============导入函数列表===================")
-    print(imports)
-    return imports
+    funcList = dump_func_divider
+    for func in imports:
+        funcList += f'{func_field_name}:{func[func_field_name]}, {func_field_address}:{func[func_field_address]}\n'
+    print(funcList)
+    return funcList
+
 

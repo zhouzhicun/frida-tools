@@ -45,7 +45,8 @@ def unicornRun(startAddr, codeHex, regName):
     print(f"unicorn run start => ( {hex(startAddr)}, {hex(endAddr)} )")
     
     mu = Uc(UC_ARCH_ARM64, UC_MODE_LITTLE_ENDIAN)
-    mu.mem_map(0x0000000, 1000 * 1024 * 1024)
+    # 设置内存映射, 大小为100M
+    mu.mem_map(0x1000000, 100 * 1024 * 1024) 
     mu.mem_write(startAddr, ARM_CODE)
     mu.emu_start(startAddr, endAddr)
 

@@ -6,6 +6,10 @@ import { AndSo } from "../../android/utils/AndSo.js"
  * 使用 florida(修改名字 + 指定端口启动) 即可过检测. florida仓库地址：https://github.com/Ylarod/Florida
  * 1.frida-server 改名；
  * 2.frida-server启动时指定端口。命令如下： ./vvda -l 0.0.0.0:1133 &
+ * 
+ * 3.运行 frida 脚本
+ * adb forward tcp:1133 tcp:1133
+ * frida -H 127.0.0.1:1133 -f com.com.sec2023.rocketmouse.mouse -l app.js
  */
 
 export function main() {
