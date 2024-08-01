@@ -15,8 +15,12 @@ import * as mouse from "./app/tx_mouse.js"
 
 import * as ace from "./app/tx_ace.js"
 
+import * as aceFinal from "./app/tx_ace_final.js"
+
+import * as demo from "./app/tx_demo.js"
+
 
 //antiMSA.main()
 
-ace.main()
+demo.main()
 

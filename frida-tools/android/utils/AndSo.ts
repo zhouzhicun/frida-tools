@@ -57,12 +57,18 @@ export namespace AndSo {
 
 
     //dump 指定so库, 并保存到/data/data/bundleName/目录下
+    /**
+     * 
+     * @param bundleName 包名
+     * @param soName so名
+     * @param dumpMethod dump方法：frida, fwrite, syscall
+     */
     export function dump_so(bundleName: string, soName: string, dumpMethod: DumpMethod = DumpMethod.frida) {
 
         //写文件
         var targetModule = Process.getModuleByName(soName);
         var dump_file_path = get_dump_file_path(bundleName, soName, targetModule.base, targetModule.size);
-        
+    
         var success = false
         switch (dumpMethod) {
             case DumpMethod.frida:
@@ -83,6 +89,8 @@ export namespace AndSo {
         } else {
             console.log("[dump so]:  dump failed");
         }
+
+        return success
     }
 
 

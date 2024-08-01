@@ -1,7 +1,7 @@
 
 
-
-function hookEncrypt(soName: string, funcAddr: number[]) {
+//批量Hook字符串解密函数
+function batchHookDecrypt(soName: string, funcAddr: number[]) {
     
     let moduleBase = Module.findBaseAddress(soName)
     for(let addr of funcAddr){

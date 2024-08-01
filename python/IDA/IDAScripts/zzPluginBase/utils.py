@@ -32,7 +32,7 @@ def getSegmentAddrRange(segName):
     for segIndex in idautils.Segments():
         temp_seg = idaapi.getseg(segIndex)
         temp_segName = ida_segment.get_segm_name(temp_seg)
-        if temp_segName == segName:
+        if segName in temp_segName:
             start = temp_seg.start_ea
             size = temp_seg.size()
             break

@@ -39,26 +39,55 @@ def get_all_func_code(segNames = None):
 
 
 
+
+################################## dump 匹配的指令 ############################################
+
+
+#获取匹配的指令
 def get_all_instructions(pattern = None):
-    # 获取程序的起始地址和结束地址
-    start_address = idc.get_inf_attr(idc.INF_MIN_EA)
-    end_address = idc.get_inf_attr(idc.INF_MAX_EA)
+
+    result = []
+    start, size = utils.getSegmentAddrRange("text")
+    if size == 0:
+        return result
 
     # 遍历每一条指令
-    result = ''
-    for address in idautils.Heads(start_address, end_address):
-        if idc.is_code(idc.get_full_flags(address)):
+    end_address = start + size
+    cur_address = start
+    while cur_address < end_address:
+        if idc.is_code(idc.get_full_flags(cur_address)):
             # 获取指令的反汇编文本
-            disasm = idc.generate_disasm_line(address, 0)
+            disasm = idc.generate_disasm_line(cur_address, 0)
             if disasm:
                 if pattern == None:
-                    result += f"0x{address:08X}: {disasm}" + '\n'
+                    result.append((cur_address, disasm))
                 else:
                     if pattern in disasm:
-                        result += f"0x{address:08X}: {disasm}" + '\n'
-    
+                        result.append((cur_address, disasm))
+        
+        cur_address = idc.next_head(cur_address)
+
     return result
-               
+
+
+#获取所有BR_CSEL配对指令
+def get_all_BR_CSEL():
+    brArr = get_all_instructions("BR")
+    br_csel_arr = []
+    for br in brArr:
+        brAddr = br[0]
+        cur_addr = brAddr
+        for i in range(1, 10):
+            
+            cur_addr = idc.prev_head(cur_addr)
+            mnem = idc.print_insn_mnem(cur_addr)
+            if mnem == "RET":
+                break
+            if mnem  == "CSEL" or mnem == "CSET":
+                disasm = idc.generate_disasm_line(cur_addr, 0)
+                br_csel_arr.append((brAddr, cur_addr, disasm))
+                break
+    return br_csel_arr
 
 
 

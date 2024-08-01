@@ -7,6 +7,35 @@
 //==========================================================
 
 
+//
+//get_self_process_name()获取当前运行进程包名
+//参考：https://github.com/lasting-yang/frida_dump/blob/master/dump_dex_class.js
+export function get_self_process_name() {
+	var openPtr = Module.getExportByName('libc.so', 'open');
+	var open = new NativeFunction(openPtr, 'int', ['pointer', 'int']);
+
+	var readPtr = Module.getExportByName("libc.so", "read");
+	var read = new NativeFunction(readPtr, "int", ["int", "pointer", "int"]);
+
+	var closePtr = Module.getExportByName('libc.so', 'close');
+	var close = new NativeFunction(closePtr, 'int', ['int']);
+
+	var path = Memory.allocUtf8String("/proc/self/cmdline");
+	var fd = open(path, 0);
+	if (fd != -1) {
+		var buffer = Memory.alloc(0x1000);
+		var result = read(fd, buffer, 0x1000);
+		close(fd);
+		result = ptr(buffer).readCString();
+		return result;
+	}
+
+	return "-1";
+}
+
+
+
+
    //获取java对象的类名
 export function get_class_name(object) {
     if (object !== null) {

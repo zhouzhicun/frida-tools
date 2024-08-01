@@ -22,13 +22,23 @@ export namespace ZZCallStack {
     }
 
 
+     //打印native函数调用堆栈(自实现栈回溯)
     export function printNativeCallstacksV2(context: any) {
-        let addr = stacktrace(context as Arm64CpuContext, 30)
-        console.log(' called from:\n' + addr.map(DebugSymbol.fromAddress).join('\n') + '\n');
+
+        let addrArr = []
+        if(Process.pointerSize == 8) {
+            addrArr = stacktrace64(context as Arm64CpuContext, 30)
+        } else {
+            addrArr = stacktrace32(context as ArmCpuContext, 30)
+        }
+        console.log(' called from:\n' + addrArr.map(DebugSymbol.fromAddress).join('\n') + '\n');
     }
 
 
-    function stacktrace(context: Arm64CpuContext, number: number) {
+
+    //================================= 自回溯堆栈 =========================================
+
+    function stacktrace64(context: Arm64CpuContext, number: number): any[] {
 
         var fp: NativePointer = context.fp;  //x29
         var sp: NativePointer = context.sp;  //x31
@@ -66,6 +76,18 @@ export namespace ZZCallStack {
     }
 
 
+    function stacktrace32(context: ArmCpuContext, number: number): any[] {
+
+        console.log("ARM32 暂未实现，待补充!!!")
+        return [];
+    }
+
+
+
+
+
+
+
 
     //================================= 当前函数栈信息 =========================================
 
@@ -85,13 +107,13 @@ export namespace ZZCallStack {
      * @param {CpuContext} context
      * @param {number} number
      */
-    export function printFuncStackInfo(context: CpuContext, number: number) {
+    export function printStackInfo(context: CpuContext, number: number) {
         var sp: NativePointer = context.sp;
 
         for (var i = 0; i < number; i++) {
             var curSp = sp.add(Process.pointerSize * i);
             console.log('showStacksModInfo curSp: ' + curSp + ', val: ' + curSp.readPointer()
-                + ', module: ' + getModuleInfoByAddr(curSp.readPointer()));
+                + ', module: ' + getModuleInfo(curSp.readPointer()));
         }
     }
 
@@ -100,7 +122,7 @@ export namespace ZZCallStack {
      * @param {NativePointer} addr
      * @returns {string}
      */
-    function getModuleInfoByAddr(addr: NativePointer): Module | null {
+    function getModuleInfo(addr: NativePointer): Module | null {
         var result = null;
         Process.enumerateModules().forEach(function (module: Module) {
             if (module.base <= addr && addr <= (module.base.add(module.size))) {

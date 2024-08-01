@@ -17,31 +17,50 @@ svc80_code = "011000D4"      #svc 0x80
 
 def searchAllSVC():
     segNames = None
-    matchSVC0 = utils.searchCode(segNames, svc0_code)
-    matchSVC80 = utils.searchCode(segNames, svc80_code)
-    printResult("found SVC0 at all: \n", matchSVC0)
-    printResult("found SVC80 at all: \n", matchSVC80)
+    svc0Arr = utils.searchCode(segNames, svc0_code)
+    svc80Arr = utils.searchCode(segNames, svc80_code)
+    printResult("found SVC0 at all: \n", svc0Arr)
+    printResult("found SVC80 at all: \n", svc80Arr)
 
     segNames = ['.text']
-    matchSVC0 = utils.searchCode(segNames, svc0_code)
-    matchSVC80 = utils.searchCode(segNames, svc80_code)
-    printResult("found SVC0 at .text: \n", matchSVC0)
-    printResult("found SVC80 at .text: \n", matchSVC0)
-
+    svc0Arr = utils.searchCode(segNames, svc0_code)
+    svc80Arr = utils.searchCode(segNames, svc80_code)
+    printResult("found SVC0 at .text: \n", svc0Arr)
+    printResult("found SVC80 at .text: \n", svc80Arr)
 
 
 def searchBR():
-    brCode = funcUtils.get_all_instructions("BR")
-    print("found BR at .text: \n" + brCode)
-
+    brCodeArr = funcUtils.get_all_instructions("BR")
+    print("found BR at: \n" + formatCode(brCodeArr))
 
 
 def searchCSEL():
-    cselCode = funcUtils.get_all_instructions("CSEL")
-    ssetCode = funcUtils.get_all_instructions("CSET")
-    print("found CSEL at .text: \n" + cselCode)
-    print("found CSET at .text: \n" + ssetCode)
-    
+    cselCodeArr = funcUtils.get_all_instructions("CSEL")
+    ssetCodeArr = funcUtils.get_all_instructions("CSET")
+    print("found CSEL at: \n" + formatCode(cselCodeArr))
+    print("found CSET at: \n" + formatCode(ssetCodeArr))
+
+
+def searchBR_CSEL():
+    br_csel_codeArr = funcUtils.get_all_BR_CSEL()
+
+    desc = '-----------------------  dump br-csel -------------------------------\n'
+    for code in br_csel_codeArr:
+        br_addr = code[0]
+        csel_addr = code[1]
+        csel_asm = code[2]
+        desc += f"0x{br_addr:08X} 0x{csel_addr:08X}: {csel_asm}" + '\n'
+    print(desc)
+
+
+def formatCode(codeArr):
+    result = ""
+    for code in codeArr:
+        address = code[0]
+        disasm = code[1]
+        result += f"0x{address:08X}: {disasm}" + '\n'
+    return result
+
 
 def printResult(tip, matchAddrs):
     str = tip
@@ -63,7 +82,8 @@ ZZSearchCode_flags = idaapi.PLUGIN_KEEP
 ZZSearchCodeMenuConfig = pluginUtils.PluginMenuConfig("ZZSearchCode/", [
     pluginUtils.PluginSubMenu('my:search_svc', '搜索SVC指令', searchAllSVC),
     pluginUtils.PluginSubMenu('my:search_br', '搜索BR指令', searchBR),
-    pluginUtils.PluginSubMenu('my:search_csel', '搜索CSEL/CSET指令', searchCSEL)
+    pluginUtils.PluginSubMenu('my:search_csel', '搜索CSEL/CSET指令', searchCSEL),
+    pluginUtils.PluginSubMenu('my:search_br_csel', '搜索 BR + CSEL/CSET指令', searchBR_CSEL)
 ])
 
 
