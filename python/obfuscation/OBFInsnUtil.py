@@ -6,7 +6,7 @@ from keystone import *
 ZZ_ARCH_ARM = 0
 ZZ_ARCH_ARM64 = 1
 
-class InsnUtil:
+class OBFInsnUtil:
 
     def __init__(self, arch=ZZ_ARCH_ARM64):
         self.init_keystone(arch)
