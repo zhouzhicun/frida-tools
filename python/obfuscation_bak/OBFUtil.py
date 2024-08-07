@@ -8,6 +8,10 @@ from OBFStruct import *
 
 
 
+
+
+
+
 #unicorn工具类
 class OBFUtil:
     def __init__(self):
@@ -52,120 +56,46 @@ class OBFUtil:
     @classmethod
     def is_condition(cls, ins_mnemonic):
         ins_mnemonic = ins_mnemonic.lower()
-        if ins_mnemonic in ['csel', 'cset', 'csetm', 'cinc', 'csinc', 'csinv', 'csneg']:
+        if ins_mnemonic == "csel" or ins_mnemonic == "cset":
             return True
         return False
     
-
     #解析条件指令
     @classmethod
     def parse_cond_info(cls, ins, context):
         ins_mnemonic = ins.mnemonic.lower() 
         if ins_mnemonic == 'csel':
-            return cls.parse_CSEL_cond(ins, context)
+            return OBFUtil.parse_CSEL_cond(ins, context)
         elif ins_mnemonic == 'cset':
-            return cls.parse_CSET_cond(ins, context)
-        elif ins_mnemonic == 'csetm':
-            return cls.parse_CSETM_cond(ins, context)
-        elif ins_mnemonic == 'cinc':
-            return cls.parse_CINC_cond(ins, context)
-        elif ins_mnemonic == 'csinc':
-            return cls.parse_CSINC_cond(ins, context)
-        elif ins_mnemonic == 'csinv':
-            return cls.parse_CSINV_cond(ins, context)
-        elif ins_mnemonic == 'csneg':
-            return cls.parse_CSNEG_cond(ins, context)
-        return None
+            return OBFUtil.parse_CSET_cond(ins, context)
+        else:
+            return None
 
 
-    #解析寄存器
-    @classmethod
-    def parse_reg(cls, ins, context, op_index):
-        reg_name = ins.reg_name(ins.operands[op_index].reg)
-        reg_value = 0 if reg_name.lower() == 'xzr' else cls.get_reg_value(context, reg_name)
-        return reg_name, reg_value
-
-    '''
-    #CSEL条件指令解析:
-    CSEL X7, X2, X0, EQ ;   //if (cond == true) X7 = X2, else X7 = X0
-    '''
+    #解析csel条件指令
     @classmethod
     def parse_CSEL_cond(cls, ins, context):
 
         cond = ins.op_str.split(', ')[-1]
-        reg_name0, _ = cls.parse_reg(ins, context, 0)
-        reg_name1, reg_value1 = cls.parse_reg(ins, context, 1)
-        reg_name2, reg_value2 = cls.parse_reg(ins, context, 2)
-        return ZZCondInfo('csel', cond, reg_name0, reg_value1, reg_value2)
+        csel_reg_name0 = ins.reg_name(ins.operands[0].reg)
+        csel_reg_name1 = ins.reg_name(ins.operands[1].reg)
+        csel_reg_name2 = ins.reg_name(ins.operands[2].reg)
+        csel_true_value = 0 if csel_reg_name1.lower() == 'xzr' else OBFUtil.get_reg_value(context, csel_reg_name1)
+        csel_false_value = 0 if csel_reg_name2.lower() == 'xzr' else OBFUtil.get_reg_value(context, csel_reg_name2)
+        print(f'csel_reg_name0 = {csel_reg_name0}')
+        return ZZCondInfo('csel', cond, csel_reg_name0, csel_true_value, csel_false_value)
 
-    '''
-    #CSET条件指令解析:
-    CSET W0, EQ ;     //if (cond == true) W0 = 1, else W0 = 0
-    '''
+    
+    #解析cset条件指令
     @classmethod
     def parse_CSET_cond(cls, ins, context):
         cond = ins.op_str.split(', ')[-1]
-        reg_name0, _ = cls.parse_reg(ins, context, 0)
-        return ZZCondInfo('cset', cond, reg_name0, 1, 0)
-    
-    '''
-    #CSETM条件指令解析:
-    CSETM W0, EQ ;     //if (cond == true) W0 = -1, else W0 = 0
-    '''
-    @classmethod
-    def parse_CSETM_cond(cls, ins, context):
-        cond = ins.op_str.split(', ')[-1]
-        reg_name0, _ = cls.parse_reg(ins, context, 0)
-        return ZZCondInfo('csetm', cond, reg_name0, -1, 0)
-        pass
+        csel_reg_name0 = ins.reg_name(ins.operands[0].reg)
+        csel_true_value = 1
+        csel_false_value = 0
+        print(f'cset_reg_name0 = {csel_reg_name0}')
+        return ZZCondInfo('cset', cond, csel_reg_name0, csel_true_value, csel_false_value)
 
-    '''
-    #CINC条件指令解析:
-    CINC W2, NE;     //if (cond == true) W2 += 1
-    '''
-    @classmethod
-    def parse_CINC_cond(cls, ins, context):
-        cond = ins.op_str.split(', ')[-1]
-        reg_name0, reg_value0 = cls.parse_reg(ins, context, 0)
-        return ZZCondInfo('cinc', cond, reg_name0, reg_value0 + 1, reg_value0)
-    
-
-    '''
-    CSINC指令-操作执行:
-    CSINC W2, W0, W3, GT   ;  // if (cond == true) W2 = w3 + 1, else W2 = w0
-    '''
-    @classmethod
-    def parse_CSINC_cond(cls, ins, context):
-        cond = ins.op_str.split(', ')[-1]
-        reg_name0, _ = cls.parse_reg(ins, context, 0)
-        _, reg_value1 = cls.parse_reg(ins, context, 1)
-        _, reg_value2 = cls.parse_reg(ins, context, 2)
-        return ZZCondInfo('csinc', cond, reg_name0, reg_value2 + 1, reg_value1)
-
-    '''
-    CSINV指令-操作执行:
-    CSINV W2, W0, W3, GE   ;  // if (cond == true) W2 = ~w3(取反), else W2 = w0
-    '''
-    @classmethod
-    def parse_CSINV_cond(cls, ins, context):
-        cond = ins.op_str.split(', ')[-1]
-        reg_name0, _ = cls.parse_reg(ins, context, 0)
-        _, reg_value1 = cls.parse_reg(ins, context, 1)
-        _, reg_value2 = cls.parse_reg(ins, context, 2)
-        return ZZCondInfo('csinv', cond, reg_name0, ~reg_value2, reg_value1)
-
-    '''
-    CSNEG指令-操作执行:
-    CSNEG W1, W0, GT  ;  // if (cond == true) W1 = ~w0, else W2 = w0
-    '''
-    @classmethod
-    def parse_CSNEG_cond(cls, ins, context):
-        cond = ins.op_str.split(', ')[-1]
-        reg_name0, _ = cls.parse_reg(ins, context, 0)
-        _, reg_value1 = cls.parse_reg(ins, context, 1)
-        return ZZCondInfo('csneg', cond, reg_name0, ~reg_value1, reg_value1)
-
-  
 
     ################################### 死代码检测 ##########################################
 
@@ -195,7 +125,7 @@ class OBFUtil:
                 return True
             
         if ins_mnemonic == 'blr':
-            func_addr = cls.get_reg_value(context, ins.reg_name(ins.operands[0].reg))
+            func_addr = OBFUtil.get_reg_value(context, ins.reg_name(ins.operands[0].reg))
             if func_addr == func__stack_chk_fail_addr:
                 return True
 
@@ -222,9 +152,9 @@ class OBFUtil:
             if op.type == ARM64_OP_MEM:
                 addr = 0
                 if op.value.mem.base != 0:
-                    addr += uc.reg_read(cls.get_unicorn_reg_index(ins.reg_name(op.value.mem.base)))
+                    addr += uc.reg_read(OBFUtil.get_unicorn_reg_index(ins.reg_name(op.value.mem.base)))
                 if op.value.mem.index != 0:
-                    addr += uc.reg_read(cls.get_unicorn_reg_index(ins.reg_name(op.value.mem.index)))
+                    addr += uc.reg_read(OBFUtil.get_unicorn_reg_index(ins.reg_name(op.value.mem.index)))
                 if op.value.mem.disp != 0:
                     addr += op.value.mem.disp
 
@@ -318,7 +248,6 @@ class OBFUtil:
     @classmethod
     def set_reg_value(cls, context, reg_name, new_reg_value):
         print(f'reg_name = {reg_name}')
-        result_context = context.copy()
         reg_name = reg_name.lower()
         reg_type = reg_name[0]
         
@@ -332,16 +261,13 @@ class OBFUtil:
                 reg_name = 'fp'
             else:
                 reg_name = 'x' + str(reg_idx)
-            reg_value = result_context[reg_name]
-            print(f'before-reg_name = {reg_name}, reg_val = {reg_value}, reg_new_val = {new_reg_value}')
+            reg_value = context[reg_name]
             reg_value = (reg_value & 0xFFFFFFFF00000000) | (new_reg_value & 0xFFFFFFFF)
-            print(f'after-reg_name = {reg_name}, reg_val = {reg_value}')
-            result_context[reg_name] = reg_value
+            context[reg_name] = reg_value
         else:
-            print('111111111111')
-            result_context[reg_name] = new_reg_value  
+            context[reg_name] = new_reg_value  
         
-        return result_context
+        return context
 
 
     ################################# context操作 ######################################
