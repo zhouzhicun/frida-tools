@@ -2,7 +2,6 @@
 
 '''
 针对自定义字符串解密函数 
-脚本来源：白龙-字符串加密第二篇：https://www.yuque.com/lilac-2hqvv/hgwa9g/rhx7nb?#a92VD
 
 特征：
 1.调用字符串解密函数，返回解密后的字符串堆地址，例如：
@@ -29,6 +28,7 @@ import ida_bytes
 import idautils
 
 import flare_emu
+from operator import itemgetter
 
 #######################################################################################
 
@@ -59,7 +59,37 @@ def final():
             ida_bytes.del_items(startAddress, 0, endAddress)
             ida_auto.plan_and_wait(startAddress, endAddress)
 
+###################################################################################
 
+##常量定义
+dump_func_divider = "\n-------------------------------dump func list --------------------------------\n"
+func_field_name = "funcName"
+func_field_address = "address"
+func_field_xrefCount = "xrefCount"
+func_field_insnCount = "insnCount"
+func_field_rate = "rate"
+func_field_topNum = 50
+
+
+#获取函数列表，按照xref数量排序
+def get_func_list_orderby_xref():
+    functionList = []
+    for func in idautils.Functions():
+        xrefs = idautils.CodeRefsTo(func, 0)
+        xrefCount = len(list(xrefs))
+        oneFuncDict = {
+            func_field_name: idc.get_func_name(func), 
+            func_field_address: hex(func), 
+            func_field_xrefCount: xrefCount
+            }
+        functionList.append(oneFuncDict)
+    function_list_by_countNum = sorted(functionList, key=itemgetter(func_field_xrefCount), reverse=True)
+
+    funcList = dump_func_divider
+    for func in function_list_by_countNum[:func_field_topNum]:
+        funcList += f'{func_field_name}:{func[func_field_name]}, {func_field_address}:{func[func_field_address]}, {func_field_xrefCount}:{func[func_field_xrefCount]}\n'
+    print(funcList)
+    return funcList
 
 
 ######################################### 对指定解密函数 匹配，解析，模拟执行并Patch ##############################################
@@ -136,18 +166,29 @@ def decryptOneFunc(decrypt_func_addr):
 
 emu_helper = flare_emu.EmuHelper()
 
-#1.解密函数列表，找到所有自定义的解密函数
-decrypt_func_table = [
-    0xABB0,
-    0xABD0,
-]
 
-#2.预处理
-init()
+def decrypt():
+    #1.解密函数列表，找到所有自定义的解密函数
+    decrypt_func_table = [
+        0xABB0,
+        0xABD0,
+    ]
 
-#3.逐个处理   
-for func_addr in decrypt_func_table:
-    decryptOneFunc(func_addr)
+    #2.预处理
+    init()
 
-#4.重新分析
-final()
+    #3.逐个处理   
+    for func_addr in decrypt_func_table:
+        decryptOneFunc(func_addr)
+
+    #4.重新分析
+    final()
+
+
+
+def main():
+    #dump 函数列表
+    get_func_list_orderby_xref()
+
+    #解密
+    #decrypt()

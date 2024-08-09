@@ -12,7 +12,7 @@ from unicorn import *
 from OBFInsnUtil import *
 from OBFUtil import *
 from OBFStruct import *
-
+from findBR import *
 
 
 
@@ -47,13 +47,11 @@ ZZCondTable = {
 }
 
 
-
-
 class OBFManager:
-    def __init__(self, config, arch):
+    def __init__(self, config):
 
         self.config = config
-        self.ins_util = OBFInsnUtil(arch)
+        self.ins_util = OBFInsnUtil(config.arch)
         self.uc = None
 
         self.br_table = {}
@@ -78,7 +76,12 @@ class OBFManager:
 
     #入队执行，校验Path是否添加到队列，防止重复执行
     def push_path(self, path):
+
         path_desc = path.path_desc()
+        if path.start_addr <= 0 or path.start_addr >= manager.config.so_end_addr:
+            print(f'异常Path，path info = {path_desc}')
+            return
+
         if path_desc not in self.tracedPathDict:
             print(f'add path = {path_desc}')
             self.tracedPathDict[path_desc] = 1
@@ -103,7 +106,7 @@ class OBFManager:
         #打印所有BLR分支
         print('---------------- print all blr -----------------')
         sorted_keys = sorted(self.blr_table.keys())
-        for addr in sorted_keys:
+        for addr_str in sorted_keys:
             print(f'br_addr = {addr_str}, jump info = {self.blr_table[addr_str]}' )
     
 manager = None
@@ -138,7 +141,10 @@ def hook_code(uc, address, size, user_data):
 
     #path指令数+1
     manager.inc_ins_count()
-    #print("[+] tracing instruction\t%s:\t%s\t%s" % (get_offset_str(cur_ins.address), cur_ins.mnemonic, cur_ins.op_str))
+
+    cur_path_start = manager.cur_path.start_addr
+    if cur_path_start in manager.config.trace_ins_path_table:
+        print("[+] tracing instruction\t%s:\t%s\t%s \n context = %s" % (get_offset_str(cur_ins.address), cur_ins.mnemonic, cur_ins.op_str, cur_context))
     
     #判断指令类型
     #2.1 遇到ret直接停止
@@ -171,12 +177,11 @@ def hook_code(uc, address, size, user_data):
     #3.3 跳过bl、svc指令 以及非栈或so本身内存访问
     config = manager.config
     is_access_ilegel_mem = OBFUtil.is_access_ilegel_memory(uc, cur_ins, config.mem_code, config.mem_stack)
-    if ins_mnemonic.startswith('bl') or ins_mnemonic.startswith('svc') or is_access_ilegel_mem:
+    if ins_mnemonic == 'bl' or ins_mnemonic == 'svc' or is_access_ilegel_mem:
         print("[+] pass instruction %s\t%s\t%s" % (get_offset_str(cur_ins.address), cur_ins.mnemonic, cur_ins.op_str))
         uc.reg_write(UC_ARM64_REG_PC, address + size)  #跳过当前指令
         return
 
-    
 
     #3.4 判断是否为条件指令
     if OBFUtil.is_condition(ins_mnemonic):
@@ -193,8 +198,8 @@ def hook_code(uc, address, size, user_data):
         print(f'cond_false_context = {cond_false_context}')
 
         next_addr = cur_ins.address + size
-        cond_true_path = ZZPathInfo(next_addr, cond_true_context, f'{cond_info.cond}_true')
-        cond_false_path = ZZPathInfo(next_addr, cond_false_context, f'{cond_info.cond}_false')
+        cond_true_path = ZZPathInfo(cur_ins.address, next_addr, cond_true_context, f'{cond_info.cond}_true')
+        cond_false_path = ZZPathInfo(cur_ins.address, next_addr, cond_false_context, f'{cond_info.cond}_false')
         manager.push_path(cond_true_path)
         manager.push_path(cond_false_path)
 
@@ -205,8 +210,8 @@ def hook_code(uc, address, size, user_data):
         print("[+] encountered b.XX, stop")
         dest_addr = cur_ins.operands[0].imm
         next_addr = cur_ins.address + size
-        cond_true_path = ZZPathInfo(dest_addr, cur_context, None)
-        cond_false_path = ZZPathInfo(next_addr, cur_context, None)
+        cond_true_path = ZZPathInfo(cur_ins.address, dest_addr, cur_context, None)
+        cond_false_path = ZZPathInfo(cur_ins.address, next_addr, cur_context, None)
         manager.push_path(cond_true_path)
         manager.push_path(cond_false_path)
         uc.emu_stop()
@@ -242,7 +247,7 @@ def hook_code(uc, address, size, user_data):
             table[ins_addr_str] = dest_addr_desc
         
         #构造子路径
-        sub_path = ZZPathInfo(reg_value, cur_context, None)
+        sub_path = ZZPathInfo(cur_ins.address, reg_value, cur_context, None)
         manager.push_path(sub_path)
 
         uc.emu_stop()
@@ -262,14 +267,14 @@ def emu_run_path(path):
 
     global manager
 
-    start_addr, context, cond_desc = path.start_addr, path.context, path.cond_desc
-    print(f'当前执行路径：\n addr = {get_offset_str(start_addr)}, cond_desc = {cond_desc}, context = {context}')
+    prev_addr, start_addr, context, cond_desc = path.prev_addr, path.start_addr, path.context, path.cond_desc
+    print(f'当前执行路径：\n  prev_addr = {get_offset_str(prev_addr)}, start_addr = {get_offset_str(start_addr)}, cond_desc = {cond_desc}, context = {context}')
 
     #重置path状态
     manager.set_cur_path(path)
 
     #准备context，并执行
-    OBFUtil.set_context(manager.uc, context)    
+    OBFUtil.set_context(manager.uc, context)   
     manager.uc.emu_start(start_addr, manager.config.mem_code[0] + manager.config.mem_code[1])  
 
 
@@ -299,6 +304,8 @@ def patch(insType):
 
         jmp_infos = jump_table[addr].split(' | ')
         asm_code = None
+        patch_ins_addr = addr_val 
+        
         if len(jmp_infos) == 1:
             dest_addr = int(jmp_infos[0], 16)
             asm_code = f'{ins_mnemonic} {dest_addr}'
@@ -316,7 +323,7 @@ def patch(insType):
             dest_addr_true = int(jump_info_true.split(':')[1], 16)
             dest_addr_false = int(jump_info_false.split(':')[1], 16)
 
-            patch_ins_addr = addr_val 
+            
             if dest_addr_true == next_addr_val:
                 asm_code = f'{ins_mnemonic}.{ZZCondTable[cond]} {dest_addr_false}'    
             elif dest_addr_false == next_addr_val:
@@ -341,19 +348,12 @@ def patch(insType):
                 print(f'addr = {addr}, jmp_infos = {bad_table[addr]}' )
 
 
-def deobf():
+def deobf(func_addr):
     
     global manager
 
-    bin_end_addr = idc.get_inf_attr(idc.INF_MAX_EA)
-    bin_bytes = idaapi.get_bytes(0, bin_end_addr)
-
-    #1.创建unicorn
-    uc = OBFUtil.create_unicorn(True, manager.config.mem_code, manager.config.mem_stack, bin_bytes, hook_code, hook_unmapped_mem_access)
-    manager.set_uc(uc)
-
     #2.开始模拟执行
-    first_path = ZZPathInfo(manager.config.mem_code[0] + manager.config.func_addr, None, None)
+    first_path = ZZPathInfo(0, manager.config.mem_code[0] + func_addr, None, None)
     manager.push_path(first_path) 
     
     #2.开始模拟执行
@@ -369,32 +369,72 @@ def deobf():
 
 ################################################ 初始化并运行 #######################################################
 
-def init():
+def init(config):
 
     global manager
 
+    manager = OBFManager(config)
+
+    #1.创建unicorn
+    bin_end_addr = idc.get_inf_attr(idc.INF_MAX_EA)
+    bin_bytes = idaapi.get_bytes(0, bin_end_addr)
+    isARM64 = config.arch == ZZ_ARCH_ARM64
+    uc = OBFUtil.create_unicorn(isARM64, manager.config.mem_code, manager.config.mem_stack, bin_bytes, hook_code, hook_unmapped_mem_access)
+    manager.set_uc(uc)
+
+
+def find_func():
+    global manager
+    br_func_set = find_BR_func(manager.config.so_start_addr, "BR")
+    blr_func_set = find_BR_func(manager.config.so_start_addr, "BLR")
+    result_func_set = br_func_set | blr_func_set
+    return result_func_set
+
+
+###################################################################################################
+
+def create_config():
+
+    arch = ZZ_ARCH_ARM64
+    
+    #so库中start和stack_chk_fail的函数地址
+    so_start_addr = 0x16190
+    so_end_addr = 0x5A328
+    stack_chk_fail_func_addr = 0x160D0
+
     #默认设置
-    unicorn_mem_code =  (0x00000000, 20 * 0x1000 * 0x1000)      #代码：20M
+    unicorn_mem_code =  (0x00000000, 100 * 0x1000 * 0x1000)      #代码：100M
     unicorn_mem_stack = (0x80000000, 8 * 0x1000 * 0x1000)       #栈：8M
     dead_code_ins_max_count = 1000                             #死代码最大指令条数
 
-    #函数信息
-    arch = ZZ_ARCH_ARM64
-    func_start_addr = 0x1619C
-    stack_chk_fail_func_addr = 0x160D0
-    
 
-    config = OBFConfig(unicorn_mem_code, unicorn_mem_stack, func_start_addr, stack_chk_fail_func_addr, dead_code_ins_max_count)
-    manager = OBFManager(config, arch)
+    trace_ins_path_table = [0x182dc]
+    config = OBFConfig(arch, unicorn_mem_code, unicorn_mem_stack, so_start_addr, so_end_addr, stack_chk_fail_func_addr, dead_code_ins_max_count, trace_ins_path_table)
+    return config
 
 
-if __name__ == '__main__':
+def main():
 
-    init()
-    deobf()
+    #初始化
+    init(create_config())
+
+    #查找所有BR函数
+    result_func_set = find_func()
+
+
+    #建议分析时碰到哪个被混淆，才对它进行Patch，全量处理碰到各种问题，处理比较耗时。
+    result_func_set = {0x1619C}
+
+
+    #开始deobfuscate
+    for func_addr in sorted(result_func_set):
+        deobf(func_addr)
 
     print(f'\n\n\n------------------------ 开始patch BR -----------------------------------')
     patch(INS_MNEM_BR)
 
     print(f'\n\n\n------------------------ 开始patch BLR -----------------------------------')
     patch(INS_MNEM_BLR)
+
+
+main()

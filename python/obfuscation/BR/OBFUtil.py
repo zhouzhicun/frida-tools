@@ -310,15 +310,16 @@ class OBFUtil:
             reg_value = context[reg_name]
             return reg_value & 0xFFFFFFFF   #读取寄存器的低32位
         else:
-            reg_value = context[reg_name]
+            reg_value = context[reg_name] & 0xFFFFFFFFFFFFFFFF
             return reg_value
 
 
 
     @classmethod
     def set_reg_value(cls, context, reg_name, new_reg_value):
-        print(f'reg_name = {reg_name}')
+
         result_context = context.copy()
+
         reg_name = reg_name.lower()
         reg_type = reg_name[0]
         
@@ -333,13 +334,11 @@ class OBFUtil:
             else:
                 reg_name = 'x' + str(reg_idx)
             reg_value = result_context[reg_name]
-            print(f'before-reg_name = {reg_name}, reg_val = {reg_value}, reg_new_val = {new_reg_value}')
+
             reg_value = (reg_value & 0xFFFFFFFF00000000) | (new_reg_value & 0xFFFFFFFF)
-            print(f'after-reg_name = {reg_name}, reg_val = {reg_value}')
             result_context[reg_name] = reg_value
         else:
-            print('111111111111')
-            result_context[reg_name] = new_reg_value  
+            result_context[reg_name] = new_reg_value & 0xFFFFFFFFFFFFFFFF
         
         return result_context
 
@@ -371,10 +370,15 @@ class OBFUtil:
         for i in range(29):
             reg_name = 'x' + str(i)
             reg_idx = UC_ARM64_REG_X0 + i
-            regs[reg_name] = uc.reg_read(reg_idx)
+            regs[reg_name] = cls.read_reg_val(uc, reg_idx)  #uc.reg_read(reg_idx) & 0xFFFFFFFFFFFFFFFF
 
         #3.fp, lr, sp
-        regs['fp'] = uc.reg_read(UC_ARM64_REG_FP)
-        regs['lr'] = uc.reg_read(UC_ARM64_REG_LR)
-        regs['sp'] = uc.reg_read(UC_ARM64_REG_SP)
+        regs['fp'] = cls.read_reg_val(uc, UC_ARM64_REG_FP)  #uc.reg_read(UC_ARM64_REG_FP) & 0xFFFFFFFFFFFFFFFF
+        regs['lr'] = cls.read_reg_val(uc, UC_ARM64_REG_LR)  #uc.reg_read(UC_ARM64_REG_LR) & 0xFFFFFFFFFFFFFFFF
+        regs['sp'] = cls.read_reg_val(uc, UC_ARM64_REG_SP)  #uc.reg_read(UC_ARM64_REG_SP) & 0xFFFFFFFFFFFFFFFF
         return regs
+
+
+    @classmethod
+    def read_reg_val(cls, uc, reg_index):
+        return uc.reg_read(reg_index) & 0xFFFFFFFFFFFFFFFF
